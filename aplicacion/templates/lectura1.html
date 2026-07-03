@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Lectosoft - El Patito Feo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Uncial+Antiqua&family=MedievalSharp&family=Pirata+One&family=UnifrakturMaguntia&family=Grenze+Gotisch:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/lectura.css' %}?v=15">
+</head>
+<body>
+    <header class="lectura-header">
+        <a href="#" onclick="confirmarSalida(event)" class="btn-atras-azul">
+            <img src="{% static 'inicio_sesion/img/Atrás.png' %}" alt="Atrás" style="width: 120px;">
+        </a>
+    </header>
+
+    <main class="lectura-container">
+        <section class="scene">
+            <div class="stars"></div>
+            <div class="fairy" id="fairy">
+                <div class="wings">
+                    <img src="{% static 'inicio_sesion/img/hada.png' %}" alt="Hada">
+                </div>
+            </div>
+            <button class="arrow left-arrow" id="prev-page">
+                <img src="{% static 'inicio_sesion/img/fle_izq_lectura.png' %}" alt="Anterior">
+            </button>
+            <div class="book-container" id="book-container">
+                <div id="flipbook"></div>
+            </div>
+            <button class="arrow right-arrow" id="next-page">
+                <img src="{% static 'inicio_sesion/img/fle_dere_lectura.png' %}" alt="Siguiente">
+            </button>
+        </section>
+    </main>
+
+    <div id="ahorcado-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="width: 100%; height: 100%; background: transparent; position: relative; border: none; box-shadow: none;">
+            <iframe id="ahorcado-iframe" src="" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+    </div>
+
+    {% if puzzle %}
+    <div id="victory-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 11000; justify-content: center; align-items: center; backdrop-filter: blur(15px); font-family: 'Fredoka One', cursive;">
+        <div style="position: relative; background: #fffdf6; padding: 40px 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); text-align: center; width: 650px; max-width: 90%; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 20px solid #fdf2e9; font-family: 'Fredoka One', cursive;">
+            <div style="border: 4px dotted #ffb142; border-radius: 30px; padding: 30px 20px; position: relative; background: #fffdf6;">
+                
+                <div style="position: absolute; top: -10px; left: -10px; font-size: 30px; color: #e1b12c;">✨</div>
+                <div style="position: absolute; top: 10px; right: -15px; font-size: 35px; color: #e1b12c;">✨</div>
+                <div style="position: absolute; bottom: -15px; right: 10px; font-size: 25px; color: #e1b12c;">✨</div>
+                <div style="position: absolute; bottom: -20px; left: -5px; font-size: 25px; color: #e1b12c;">✨</div>
+
+                <h2 style="font-size: 45px; color: #ffb4a2; margin-bottom: 25px; letter-spacing: 1px; text-shadow: -2px -2px 0 #e56b6f, 2px -2px 0 #e56b6f, -2px 2px 0 #e56b6f, 2px 2px 0 #e56b6f, 0 4px 0 #e56b6f;">
+                    ¡DESBLOQUEADO!
+                </h2>
+                
+                <div style="font-size: 26px; color: #2d5a27; margin-bottom: 35px; line-height: 1.5; font-family: 'Fredoka One', cursive;">
+                    Has obtenido nuevas piezas del destino:
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 30px; margin-bottom: 40px;">
+                    <div id="cont-pieza-1" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div id="pieza-1-img" class="piece-visual" style="background-image: url('{{ puzzle.imagen.url }}'); border-color: #ffb142; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></div>
+                        <span id="txt-pieza-1" style="font-size: 18px; color: #2d5a27; font-family: 'Fredoka One', cursive;">PIEZA #1</span>
+                    </div>
+                    <div id="cont-pieza-2" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div id="pieza-2-img" class="piece-visual" style="background-image: url('{{ puzzle.imagen.url }}'); border-color: #ffb142; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></div>
+                        <span id="txt-pieza-2" style="font-size: 18px; color: #2d5a27; font-family: 'Fredoka One', cursive;">PIEZA #2</span>
+                    </div>
+                    <div id="cont-pieza-3" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                        <div id="pieza-3-img" class="piece-visual" style="background-image: url('{{ puzzle.imagen.url }}'); border-color: #ffb142; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"></div>
+                        <span id="txt-pieza-3" style="font-size: 18px; color: #2d5a27; font-family: 'Fredoka One', cursive;">PIEZA #3</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <button onclick="cerrarVictoria()" style="background: #fbdc69; border: none; border-radius: 30px; color: white; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 15px 35px; cursor: pointer; box-shadow: 0 8px 0 #d4b548; text-transform: uppercase; transition: transform 0.1s, box-shadow 0.1s; position: relative; overflow: hidden; -webkit-text-stroke: 1px rgba(0,0,0,0.1); text-shadow: 1px 1px 0px rgba(0,0,0,0.1);"
+                        onmousedown="this.style.transform='translateY(5px)'; this.style.boxShadow='0 3px 0 #d4b548';" 
+                        onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';" 
+                        onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';">
+                        <div style="position: absolute; top: 8px; left: 15px; width: 20px; height: 10px; background: rgba(255,255,255,0.7); border-radius: 10px; transform: rotate(-10deg);"></div>
+                        CONTINUAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if puzzle %}
+    <div id="puzzle-progress-widget" class="puzzle-progress-container">
+        <div class="puzzle-progress-title">BARRA DE PROGRESO</div>
+        <div class="puzzle-progress-bar-bg">
+            <div id="puzzle-progress-fill" class="puzzle-progress-bar-fill"></div>
+        </div>
+        <div class="puzzle-progress-text">
+            <span id="fichas-actuales">0</span> / <span id="fichas-totales">0</span> PIEZAS
+        </div>
+    </div>
+    {% endif %}
+
+    <style>
+        .piece-visual { width: 150px; height: 150px; background-repeat: no-repeat; border: 3px solid #f0d06f; border-radius: 20px; background-size: 450px 450px; }
+        .puzzle-progress-container { position: fixed; bottom: 30px; right: 30px; z-index: 1000; background: rgba(26, 26, 26, 0.85); backdrop-filter: blur(12px); border: 2px solid #f0d06f; border-radius: 24px; padding: 15px 25px; color: white; cursor: default; font-family: 'Fredoka One', sans-serif; display: flex; flex-direction: column; align-items: center; }
+        .puzzle-progress-bar-bg { width: 160px; height: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; overflow: hidden; margin: 10px 0; }
+        .puzzle-progress-bar-fill { height: 100%; background: linear-gradient(90deg, #f0d06f, #ffd700); width: 0%; transition: width 1s; }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+    <script>
+        window.userProgress = {
+            paginasLeidas: Number("{{ paginas_leidas }}") || 0,
+            fichasDesbloqueadas: Number("{{ fichas_desbloqueadas }}") || 0,
+            nombreJugador: "{{ request.COOKIES.jugador_actual }}",
+            puzzleUrl: "{% if puzzle %}{{ puzzle.imagen.url }}{% else %}''{% endif %}",
+            puzzleDificultad: Number("{% if puzzle %}{{ puzzle.dificultad }}{% else %}0{% endif %}") || 3,
+            totalPiezas: (Number("{% if puzzle %}{{ puzzle.dificultad }}{% else %}0{% endif %}") || 3) * (Number("{% if puzzle %}{{ puzzle.dificultad }}{% else %}0{% endif %}") || 3),
+            puzzleId: "{% if puzzle %}{{ puzzle.id }}{% else %}None{% endif %}",
+            paradasVistas: new Set()
+        };
+    </script>
+    <script src="{% static 'inicio_sesion/js/lectura1.js' %}?v=1"></script>
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+    {% include "modal_salida.html" %}
+</body>
+</html>

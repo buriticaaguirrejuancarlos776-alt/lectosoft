@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft | Panel de Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/admin_theme.css' %}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+        body { background-color: #0b1120; color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
+        
+        .sidebar { 
+            width: 260px; 
+            background: #0f172a; 
+            border-right: 1px solid rgba(255,255,255,0.05); 
+            padding: 25px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            position: fixed; 
+            left: 0; 
+            top: 0; 
+        }
+        
+        .main-content { 
+            margin-left: 260px; 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            position: relative;
+        }
+
+        /* Ambient light for main content */
+        .ambient-light {
+            position: absolute; 
+            top: 30%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 800px; 
+            height: 500px; 
+            background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, transparent 70%); 
+            filter: blur(50px); 
+            z-index: -1; 
+            pointer-events: none;
+        }
+
+        .topbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px 40px; 
+        }
+        
+        .sidebar-link { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 12px 15px; 
+            border-radius: 12px; 
+            color: #94a3b8; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 14px; 
+            transition: all 0.3s; 
+            margin-bottom: 5px; 
+        }
+        .sidebar-link:hover { 
+            background: rgba(255,255,255,0.05); 
+            color: white; 
+        }
+        .sidebar-link.active { 
+            background: rgba(30, 58, 138, 0.4); 
+            border: 1px solid rgba(59, 130, 246, 0.3); 
+            color: #60a5fa; 
+        }
+        
+        .top-link { 
+            color: #94a3b8; 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-weight: 600; 
+            font-size: 13px; 
+            transition: 0.3s; 
+        }
+        .top-link:hover { 
+            color: white; 
+        }
+        .top-link.active { 
+            background: rgba(30, 58, 138, 0.4); 
+            border: 1px solid rgba(59, 130, 246, 0.3); 
+            color: #60a5fa; 
+            padding: 8px 20px; 
+            border-radius: 20px; 
+        }
+
+        .module-card { 
+            background: #1e293b; 
+            border-radius: 20px; 
+            padding: 35px 25px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            position: relative; 
+            border: 1px solid rgba(255,255,255,0.03); 
+            text-align: center; 
+            transition: 0.3s; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+        }
+        .module-card:hover { 
+            transform: translateY(-5px); 
+            border-color: rgba(255,255,255,0.1); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3); 
+        }
+        
+        .card-btn { 
+            width: 100%; 
+            padding: 12px; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 13px; 
+            transition: 0.3s; 
+            border: 1px solid transparent; 
+        }
+        .card-btn:hover { 
+            opacity: 0.9; 
+            transform: scale(1.02);
+        }
+
+        /* Colores Específicos de las Tarjetas (Según Imagen) */
+        .btn-cuentos { background: rgba(30, 58, 138, 0.4); color: #60a5fa; }
+        .btn-cuentos:hover { border-color: rgba(96, 165, 250, 0.4); background: rgba(30, 58, 138, 0.6); }
+        .card-cuentos-glow { position: absolute; top: 0; left: 20%; right: 20%; height: 2px; background: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+        .icon-cuentos { background: radial-gradient(circle, rgba(59,130,246,0.15), transparent); }
+
+        .btn-rompe { background: rgba(20, 83, 45, 0.4); color: #4ade80; }
+        .btn-rompe:hover { border-color: rgba(74, 222, 128, 0.4); background: rgba(20, 83, 45, 0.6); }
+        .card-rompe-glow { position: absolute; top: 0; left: 20%; right: 20%; height: 2px; background: #22c55e; box-shadow: 0 0 15px #22c55e; }
+        .icon-rompe { background: radial-gradient(circle, rgba(34,197,94,0.15), transparent); }
+
+        .btn-juga { background: rgba(88, 28, 135, 0.4); color: #c084fc; }
+        .btn-juga:hover { border-color: rgba(192, 132, 252, 0.4); background: rgba(88, 28, 135, 0.6); }
+        .card-juga-glow { position: absolute; top: 0; left: 20%; right: 20%; height: 2px; background: #a855f7; box-shadow: 0 0 15px #a855f7; }
+        .icon-juga { background: radial-gradient(circle, rgba(168,85,247,0.15), transparent); }
+
+        .btn-repo { background: rgba(15, 118, 110, 0.4); color: #2dd4bf; }
+        .btn-repo:hover { border-color: rgba(45, 212, 191, 0.4); background: rgba(15, 118, 110, 0.6); }
+        .card-repo-glow { position: absolute; top: 0; left: 20%; right: 20%; height: 2px; background: #14b8a6; box-shadow: 0 0 15px #14b8a6; }
+        .icon-repo { background: radial-gradient(circle, rgba(20,184,166,0.15), transparent); }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR (Según diseño de la imagen) -->
+    <aside class="sidebar">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 50px;">
+            <div style="width: 38px; height: 38px; display: flex; justify-content: center; align-items: center;">
+                <img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            </div>
+            <div style="line-height: 1.1;">
+                <span style="font-weight: 900; color: white; font-size: 16px; letter-spacing: 1px;">LECTOSOFT</span><br>
+                <span style="font-weight: 800; color: #38bdf8; font-size: 12px; letter-spacing: 2px;">ADMIN</span>
+            </div>
+        </div>
+
+        <div style="font-size: 11px; color: #475569; font-weight: 800; letter-spacing: 1.5px; margin-bottom: 15px; padding-left: 5px;">ADMINISTRACIÓN</div>
+        
+        <nav style="display: flex; flex-direction: column;">
+            <a href="/administrador/" class="sidebar-link active"><span>📱</span> Panel de Control</a>
+            <a href="/admin_lectura/" class="sidebar-link"><span>📖</span> Cuentos</a>
+            <a href="/admi_rompecabeza/" class="sidebar-link"><span>🧩</span> Rompecabezas</a>
+            <a href="/jugadores/" class="sidebar-link"><span>👥</span> Jugadores</a>
+            <a href="/reportes/" class="sidebar-link"><span>📊</span> Reportes</a>
+            <a href="{% url 'manual_admin' %}" class="sidebar-link"><span>📘</span> Manual</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="ambient-light"></div>
+        
+        <header class="topbar" style="justify-content: flex-end;">
+            <!-- Acciones Top Right -->
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div id="theme-toggle-btn" class="theme-toggle-container" style="background: rgba(30, 41, 59, 0.6); padding: 4px; border-radius: 20px; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;">
+                    <div id="theme-sun" style="padding: 6px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.3s; opacity: 0.5;">
+                        <span style="font-size: 12px;">☀️</span>
+                    </div>
+                    <div id="theme-moon" style="background: #1e293b; padding: 6px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.3s;">
+                        <span style="font-size: 12px;">🌙</span>
+                    </div>
+                </div>
+                
+                <a href="{% url 'logout_admin' %}" style="display: flex; align-items: center; gap: 8px; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.3s;" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='transparent'">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/><path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/></svg>
+                    Salir
+                </a>
+            </div>
+        </header>
+
+        <div style="padding: 20px 40px; max-width: 1300px; width: 100%;">
+            
+            <!-- Hero section -->
+            <div style="margin-bottom: 50px;">
+                <p style="color: #38bdf8; font-weight: 700; font-size: 15px; margin-bottom: 8px;">Bienvenido, Administrador</p>
+                <h1 style="color: white; font-size: 2.8rem; font-weight: 900; margin: 0 0 12px 0; line-height: 1.1; letter-spacing: -0.5px;">Panel de Control <br><span style="color: #60a5fa;">y Gestión Principal</span></h1>
+                <p style="color: #94a3b8; font-size: 15px; font-weight: 500;">Administra y monitorea todo el contenido y la actividad de LectoSoft.</p>
+            </div>
+
+            <!-- Cards -->
+            <h3 style="color: white; font-size: 1.2rem; font-weight: 700; margin-bottom: 25px;">Módulos principales</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px;">
+                
+                <!-- CUENTOS -->
+                <div class="module-card">
+                    <div class="card-cuentos-glow"></div>
+                    <div class="icon-cuentos" style="width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                        <img src="{% static 'inicio_sesion/img/cuentos.png' %}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                    </div>
+                    <h3 style="color: white; font-size: 1.3rem; margin: 0 0 12px 0; font-weight: 800;">Cuentos</h3>
+                    <p style="color: #94a3b8; font-size: 12.5px; margin: 0 0 30px 0; line-height: 1.5; font-weight: 500;">Gestiona, crea y organiza<br>todos los relatos.</p>
+                    <a href="/admin_lectura/" class="card-btn btn-cuentos">Administrar &rarr;</a>
+                </div>
+
+                <!-- ROMPECABEZAS -->
+                <div class="module-card">
+                    <div class="card-rompe-glow"></div>
+                    <div class="icon-rompe" style="width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                        <img src="{% static 'inicio_sesion/img/rompecabeza_admi.png' %}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                    </div>
+                    <h3 style="color: white; font-size: 1.3rem; margin: 0 0 12px 0; font-weight: 800;">Rompecabezas</h3>
+                    <p style="color: #94a3b8; font-size: 12.5px; margin: 0 0 30px 0; line-height: 1.5; font-weight: 500;">Crea y administra retos<br>y actividades.</p>
+                    <a href="/admi_rompecabeza/" class="card-btn btn-rompe">Administrar &rarr;</a>
+                </div>
+
+                <!-- JUGADORES -->
+                <div class="module-card">
+                    <div class="card-juga-glow"></div>
+                    <div class="icon-juga" style="width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                        <img src="{% static 'inicio_sesion/img/persona_admin.png' %}" style="width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                    </div>
+                    <h3 style="color: white; font-size: 1.3rem; margin: 0 0 12px 0; font-weight: 800;">Jugadores</h3>
+                    <p style="color: #94a3b8; font-size: 12.5px; margin: 0 0 30px 0; line-height: 1.5; font-weight: 500;">Controla usuarios, roles<br>y permisos.</p>
+                    <a href="/jugadores/" class="card-btn btn-juga">Administrar &rarr;</a>
+                </div>
+
+                <!-- REPORTES -->
+                <div class="module-card">
+                    <div class="card-repo-glow"></div>
+                    <div class="icon-repo" style="width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+                        <span style="font-size: 40px; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">📊</span>
+                    </div>
+                    <h3 style="color: white; font-size: 1.3rem; margin: 0 0 12px 0; font-weight: 800;">Reportes</h3>
+                    <p style="color: #94a3b8; font-size: 12.5px; margin: 0 0 30px 0; line-height: 1.5; font-weight: 500;">Consulta estadísticas y<br>métricas globales.</p>
+                    <a href="/reportes/" class="card-btn btn-repo">Ver reportes &rarr;</a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Script de escalado responsivo (ajustado para el nuevo layout ancho) -->
+    <script>
+        function aplicarEscalaResponsiva() {
+            const minWidth = 1200; 
+            const screenWidth = window.innerWidth;
+            
+            if (screenWidth < minWidth) {
+                const scale = screenWidth / minWidth;
+                document.body.style.transform = `scale(${scale})`;
+                document.body.style.transformOrigin = 'top left';
+                document.body.style.width = `${minWidth}px`;
+                document.body.style.minHeight = `${window.innerHeight / scale}px`;
+                document.documentElement.style.overflowX = 'hidden';
+                document.body.style.overflowX = 'hidden';
+            } else {
+                document.body.style.transform = 'none';
+                document.body.style.width = '100%';
+                document.body.style.minHeight = '100vh';
+            }
+        }
+        window.addEventListener('resize', aplicarEscalaResponsiva);
+        window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+        aplicarEscalaResponsiva();
+    </script>
+    <script src="{% static 'inicio_sesion/js/admin_theme.js' %}"></script>
+</body>
+</html>

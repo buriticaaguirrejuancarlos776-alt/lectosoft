@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lectosoft - Vista Enmarcada</title>
+
+<link rel="stylesheet" href="{% static 'inicio_sesion/css/menu_juego.css' %}">
+
+<style>
+    body {
+        background-color: #000 !important;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden; 
+    }
+
+    .contenedor {
+        width: 90%;  
+        height: 80%; 
+        
+        background-color: transparent !important; 
+        border: none !important;
+        box-shadow: none !important;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .mensaje, .card {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        width: 100%;
+        height: 100%;
+    }
+
+    .navbar, .menu, .btn, .muneco, h1, .animales, img {
+        display: none !important;
+    }
+</style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+        <section class="mensaje">
+            <div class="card"></div>
+        </section>
+    </div>
+
+
+
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; 
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

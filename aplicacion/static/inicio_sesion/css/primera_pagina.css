@@ -1,0 +1,310 @@
+:root {
+    --dark-custom: #272525;
+    --game-bg-color: rgba(142, 170, 169, 0.8); 
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: url("../img/fondo_principal.png") no-repeat center center fixed;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- ANIMACIÓN DE HOJAS --- */
+.hojas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; 
+    z-index: 0;
+    overflow: hidden;
+}
+
+.hoja-cae {
+    position: absolute;
+    top: -100px;
+    width: 90px; 
+    opacity: 1;
+    animation: caer linear infinite;
+}
+
+@keyframes caer {
+    0% { top: -100px; transform: translateX(0) rotate(0deg); }
+    25% { transform: translateX(40px) rotate(45deg); }
+    50% { transform: translateX(-40px) rotate(90deg); }
+    75% { transform: translateX(40px) rotate(135deg); }
+    100% { top: 110vh; transform: translateX(0) rotate(180deg); }
+}
+
+/* Distribución manual de las hojas para que no caigan juntas */
+.h1 { left: 5%; animation-duration: 8s; animation-delay: 0s; }
+.h2 { left: 15%; animation-duration: 12s; animation-delay: 2s; }
+.h3 { left: 25%; animation-duration: 10s; animation-delay: 5s; }
+.h4 { left: 35%; animation-duration: 15s; animation-delay: 1s; }
+.h5 { left: 45%; animation-duration: 9s; animation-delay: 3s; }
+.h6 { left: 55%; animation-duration: 11s; animation-delay: 0s; }
+.h7 { left: 65%; animation-duration: 14s; animation-delay: 4s; }
+.h8 { left: 75%; animation-duration: 10s; animation-delay: 6s; }
+.h9 { left: 85%; animation-duration: 13s; animation-delay: 2s; }
+.h10 { left: 95%; animation-duration: 16s; animation-delay: 1s; }
+
+/* --- ESTRUCTURA --- */
+.tree-container {
+    position: fixed;
+    width: 180px;
+    height: 100vh;
+    z-index: 1;
+}
+.trunk-left { left: 0; }
+.trunk-right { right: 0; }
+
+.img-tronco {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.panda-hugging {
+    position: fixed;
+    width: 180px;
+    z-index: 5;
+    pointer-events: none;
+}
+.panda-left { left: 0; bottom: 10%; }
+.panda-right { right: 0; top: 10%; }
+
+.panda-hugging img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(4px 6px 12px rgba(0,0,0,0.3));
+}
+
+.titulo {
+    text-align: center;
+    margin-top: 40px;
+    position: relative;
+    z-index: 10;
+}
+.titulo img {
+    width: 400px;
+    filter: drop-shadow(3px 3px 0 white);
+}
+
+.mensajes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 80px auto;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+}
+
+.card {
+    position: relative;
+    width: 250px;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #4a3b32;
+    font-family: 'Montserrat', Arial, sans-serif;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    background: rgba(244, 241, 219, 0.85);
+}
+
+.rojo { margin-right: -120px; }
+.verde { margin-left: 200px; }
+
+.oso {
+    position: absolute;
+    width: 320px;
+    z-index: 15;
+    bottom: -55px;
+    pointer-events: none;
+}
+.izquierda { left: -124px !important; }
+.derecha { right: -122px !important; bottom: -50px !important; }
+
+.info-lectosoft {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px auto 40px auto;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+}
+
+.card.info {
+    width: 600px;
+    margin: 0;
+    padding: 30px 50px;
+    background: rgba(244, 241, 219, 0.95);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card.info h3 {
+    font-family: 'Luckiest Guy', cursive;
+    color: #1b4c11;
+    font-size: 40px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.card.info p {
+    font-family: 'Montserrat', Arial, sans-serif;
+    color: #4a3b32;
+    font-size: 22px;
+    line-height: 1.5;
+    text-align: center;
+    margin: 0;
+    font-weight: 500;
+}
+
+.juego {
+    width: 600px;
+    margin: 80px auto 100px auto;
+    background-color: var(--game-bg-color);
+    padding: 20px 40px 30px 40px; 
+    border-radius: 35px;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    border: 5px solid white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+.juego h2 {
+    margin: 0;
+    position: absolute;
+    top: 0; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    width: 100%;
+}
+
+.juego h2 img {
+    width: 550px; 
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+}
+
+.opciones {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px 0 20px 0; 
+}
+
+.opcion {
+    background: rgba(255, 255, 255, 0.5);
+    border: 3px solid white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.opcion:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.opcion img {
+    width: 120px; 
+}
+
+.opcion p {
+    margin-top: 15px;
+    margin-bottom: 0;
+    color: #272525;
+    font-size: 24px; 
+    font-family: 'Luckiest Guy', cursive;
+}
+
+.btn-jugar {
+    display: inline-block;
+    background: linear-gradient(180deg, #9ccc65 0%, #689f38 100%);
+    color: white;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 36px;
+    padding: 15px 60px;
+    border-radius: 50px;
+    text-decoration: none;
+    border: 5px solid white;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2), inset 0 -4px 0 rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+.btn-jugar:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.3), inset 0 -4px 0 rgba(0,0,0,0.1);
+}
+
+.btn-jugar:active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.btn-huella {
+    display: inline-block;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-huella img {
+    height: 90px;
+    width: 90px;
+}
+
+.btn-huella:hover {
+    transform: scale(1.15);
+}
+
+.btn-huella:hover img {
+    filter: drop-shadow(0 0 10px #ffffff);
+}
+
+footer {
+    background-color: var(--dark-custom);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    position: relative;
+    z-index: 100;
+    margin-top: auto;
+}
+footer h4 { color: #ffeb3b; }
+footer .footer-left img { width: 60px; }
+footer .footer-right img { width: 100px; }
+

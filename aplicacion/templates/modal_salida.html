@@ -1,0 +1,69 @@
+<!-- ========================================= -->
+<!-- MODAL CONFIRMAR SALIDA (REUSABLE) -->
+<!-- ========================================= -->
+<div id="modal-confirmar-salida" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 15000; justify-content: center; align-items: center; backdrop-filter: blur(5px); font-family: 'Fredoka One', cursive;">
+    
+    <div style="position: relative; background: #fffdf6; padding: 40px 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); text-align: center; width: 650px; max-width: 90%; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 20px solid #fdf2e9;">
+        
+        <!-- Marco interior punteado simulando colores -->
+        <div style="border: 4px dotted #ffb142; border-radius: 30px; padding: 30px 20px; position: relative; background: #fffdf6;">
+            
+            <!-- Estrellitas -->
+            <div style="position: absolute; top: -10px; left: -10px; font-size: 30px; color: #e1b12c;">✨</div>
+            <div style="position: absolute; top: 10px; right: -15px; font-size: 35px; color: #e1b12c;">✨</div>
+            <div style="position: absolute; bottom: -15px; right: 10px; font-size: 25px; color: #e1b12c;">✨</div>
+            <div style="position: absolute; bottom: -20px; left: -5px; font-size: 25px; color: #e1b12c;">✨</div>
+
+            <h2 style="font-size: 45px; color: #ffb4a2; margin-bottom: 25px; letter-spacing: 1px; text-shadow: -2px -2px 0 #e56b6f, 2px -2px 0 #e56b6f, -2px 2px 0 #e56b6f, 2px 2px 0 #e56b6f, 0 4px 0 #e56b6f;">
+                ¡ESPERA UN POQUITO!
+            </h2>
+            
+            <div style="font-size: 26px; color: #2d5a27; margin-bottom: 35px; line-height: 1.5;">
+                ¿Deseas salir del libro? <br>
+                <span style="font-size: 18px; color: #2d5a27; display: inline-block; margin-top: 10px;">Tu progreso se guardará mágicamente para que puedas continuar después.</span>
+            </div>
+            
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                
+                <button onclick="cerrarModalSalida()" style="background: #fbdc69; border: none; border-radius: 30px; color: white; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 15px 35px; cursor: pointer; box-shadow: 0 8px 0 #d4b548; text-transform: uppercase; transition: transform 0.1s, box-shadow 0.1s; position: relative; overflow: hidden; -webkit-text-stroke: 1px rgba(0,0,0,0.1); text-shadow: 1px 1px 0px rgba(0,0,0,0.1);"
+                    onmousedown="this.style.transform='translateY(5px)'; this.style.boxShadow='0 3px 0 #d4b548';" 
+                    onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';" 
+                    onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';">
+                    <div style="position: absolute; top: 8px; left: 15px; width: 20px; height: 10px; background: rgba(255,255,255,0.7); border-radius: 10px; transform: rotate(-10deg);"></div>
+                    Seguir leyendo
+                </button>
+                
+                <button onclick="ejecutarSalida()" style="background: #8ebce6; border: none; border-radius: 30px; color: white; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 15px 35px; cursor: pointer; box-shadow: 0 8px 0 #6a9ac4; text-transform: uppercase; transition: transform 0.1s, box-shadow 0.1s; position: relative; overflow: hidden; -webkit-text-stroke: 1px rgba(0,0,0,0.1); text-shadow: 1px 1px 0px rgba(0,0,0,0.1);"
+                    onmousedown="this.style.transform='translateY(5px)'; this.style.boxShadow='0 3px 0 #6a9ac4';" 
+                    onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #6a9ac4';" 
+                    onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #6a9ac4';">
+                    <div style="position: absolute; top: 8px; left: 15px; width: 20px; height: 10px; background: rgba(255,255,255,0.7); border-radius: 10px; transform: rotate(-10deg);"></div>
+                    Guardar y Salir
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.urlCatalogo = "{% url 'catalogo' %}";
+    
+    function confirmarSalida(event) {
+        if (event) event.preventDefault();
+        document.getElementById('modal-confirmar-salida').style.display = 'flex';
+    }
+    
+    function cerrarModalSalida() {
+        document.getElementById('modal-confirmar-salida').style.display = 'none';
+    }
+    
+    async function ejecutarSalida() {
+        if (typeof guardarProgreso === 'function' && window.userProgress) {
+            try {
+                await guardarProgreso(window.userProgress.paginasLeidas);
+            } catch(e) { console.error(e); }
+        }
+        window.location.href = window.urlCatalogo;
+    }
+</script>

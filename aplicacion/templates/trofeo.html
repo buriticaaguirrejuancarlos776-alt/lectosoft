@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft - Trofeos Triangulares</title>
+
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/menu_juego.css' %}">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/trofeo.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #000 !important;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+            font-family: 'Luckiest Guy', cursive;
+        }
+
+        .contenedor {
+            width: 90vw;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; 
+            align-items: center;
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .logo-text {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            z-index: 10;
+        }
+
+        .logo-text img {
+            height: 110px;
+            width: auto;
+        }
+
+        .btn-inicio-limpio {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            z-index: 10;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            cursor: pointer;
+        }
+
+        .btn-inicio-limpio img {
+            width: 90px;
+            height: auto;
+        }
+
+        main {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-title {
+            font-size: 2.8rem !important;
+            color: #000 !important;
+            margin-top: 10px !important;
+            letter-spacing: 2px;
+        }
+
+
+        .podium-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; 
+            gap: 30px;
+            width: 100%;
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+
+        .trophy-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .img-lateral {
+            width: 250px; 
+            height: auto;
+            filter: drop-shadow(10px 10px 15px rgba(0,0,0,0.4));
+        }
+
+        .img-oro {
+            width: 330px; 
+            height: auto;
+            filter: drop-shadow(10px 10px 15px rgba(0,0,0,0.4));
+        }
+
+        .gold-wrapper {
+            margin-bottom: 60px; 
+        }
+
+        .trophy-label {
+            margin-top: 10px;
+            font-size: 1.5rem; 
+            color: #000;
+            text-align: center;
+            font-family: 'Luckiest Guy', cursive;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+        }
+
+        .trophy-link:hover {
+            transform: scale(1.05);
+        }
+
+        .trophy-locked {
+            filter: grayscale(1) opacity(0.6) !important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .lock-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            z-index: 5;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        }
+
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+        
+        <div class="logo-text">
+            <img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Logo">
+        </div>
+
+        <a href="/menu" class="btn-inicio-limpio">
+            <img src="{% static 'inicio_sesion/img/inicio_catalogo.png' %}" alt="Ir al Menú"> 
+        </a>
+
+        <main>
+            <h1 class="main-title">TROFEOS</h1>
+
+            <section class="podium-container">
+                
+                <a href="{% if tiene_bronce %}{% url 'bronce' %}{% else %}#{% endif %}" class="trophy-link {% if not tiene_bronce %}trophy-locked{% endif %}">
+                    {% if not tiene_bronce %}<div class="lock-icon">🔒</div>{% endif %}
+                    <img src="{% static 'inicio_sesion/img/trofeo_bronce.png' %}" class="img-lateral" alt="Bronce">
+                    <p class="trophy-label">FUEGO DE BRONCE</p>
+                    {% if not tiene_bronce %}<p style="font-size: 0.8rem; color: #666;">(300 pts)</p>{% endif %}
+                </a>
+
+                <a href="{% if tiene_oro %}{% url 'oro' %}{% else %}#{% endif %}" class="trophy-link gold-wrapper {% if not tiene_oro %}trophy-locked{% endif %}">
+                    {% if not tiene_oro %}<div class="lock-icon">🔒</div>{% endif %}
+                    <img src="{% static 'inicio_sesion/img/trofeo_oro.png' %}" class="img-oro" alt="Oro">
+                    <p class="trophy-label">DRAGON DE ORO</p>
+                    {% if not tiene_oro %}<p style="font-size: 0.8rem; color: #666;">(1000 pts)</p>{% endif %}
+                </a>
+
+                <a href="{% if tiene_plata %}{% url 'plata' %}{% else %}#{% endif %}" class="trophy-link {% if not tiene_plata %}trophy-locked{% endif %}">
+                    {% if not tiene_plata %}<div class="lock-icon">🔒</div>{% endif %}
+                    <img src="{% static 'inicio_sesion/img/trofeo_plata.png' %}" class="img-lateral" alt="Plata">
+                    <p class="trophy-label">LUNA DE PLATA</p>
+                    {% if not tiene_plata %}<p style="font-size: 0.8rem; color: #666;">(600 pts)</p>{% endif %}
+                </a>
+
+            </section>
+        </main>
+        <!-- BOTÓN FLOTANTE MANUAL DE USUARIO -->
+        <style>
+            .btn-flotante-manual {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                background-color: #ff9800;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 36px;
+                font-family: 'Luckiest Guy', sans-serif;
+                text-decoration: none;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                z-index: 9999;
+                border: 3px solid white;
+                transition: transform 0.2s, background-color 0.2s;
+            }
+            .btn-flotante-manual:hover {
+                transform: scale(1.1);
+                background-color: #f57c00;
+                color: white;
+            }
+        </style>
+        <a href="{% url 'manual_usuario' %}" class="btn-flotante-manual" title="Ver Manual de Usuario">
+            ?
+        </a>
+    </div>
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

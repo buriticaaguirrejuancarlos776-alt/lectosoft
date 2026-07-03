@@ -1,0 +1,8 @@
+Deleting Libro: soldado, id: 51
+Deleting Puzzle: Rompecabezas de soldado (ID: 74)
+ - Deleted image
+ - Deleted puzzle from DB
+ - Deleted book image
+Puzzles count after rompecabeza.delete(): 0
+ - Deleted book from DB
+Puzzles with similar title after book deletion: 1

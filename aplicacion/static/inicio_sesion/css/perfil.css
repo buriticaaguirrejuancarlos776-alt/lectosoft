@@ -1,0 +1,359 @@
+body {
+    background-color: #000 !important;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'Luckiest Guy', cursive;
+}
+
+.contenedor {
+    width: 90vw;
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.logo-text-img {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: 100px;
+    width: auto;
+}
+
+.btn-inicio-limpio {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    z-index: 10;
+    transition: transform 0.2s;
+}
+
+.btn-inicio-limpio:hover {
+    transform: scale(1.1);
+}
+
+.btn-inicio-limpio img {
+    width: 90px;
+    height: auto;
+}
+
+/* Título Perfil */
+.title-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.panel-perfil {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 950px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: none;
+}
+
+.profile-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    width: 100%;
+    margin-top: 120px;
+}
+
+.title-page {
+    font-size: 5rem !important;
+    color: #1a1a1a !important;
+    margin: 0 20px !important;
+    position: relative;
+    z-index: 2;
+}
+
+.title-container::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200%;
+    height: 120px;
+    background-image: url('../img/linea_estrella.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
+}
+
+.radiating-lines {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 80px;
+}
+
+.radiating-lines.left {
+    left: -95px;
+    width: 150px;
+    height: 210px;
+    background-image: url('../img/linea_izqui.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: translateY(-60%);
+}
+
+.radiating-lines.right {
+    right: -70px;
+    width: 100px;
+    height: 140px;
+    background-image: url('../img/linea_dere.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: translateY(-70%) scaleX(-1);
+}
+
+/* Avatar y Neón */
+.avatar-section {
+    position: relative;
+}
+
+.avatar-wrapper {
+    display: inline-flex;
+    width: 250px;
+    height: 250px;
+    border: 8px solid white;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 40px var(--neon-color, #0ff), inset 0 0 20px rgba(255,255,255,0.8);
+    padding: 20px;
+    transition: all 0.5s ease;
+    backdrop-filter: blur(8px);
+    position: relative;
+}
+
+.crown-mask {
+    position: absolute;
+    top: -105px;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    transform: translateX(-50%);
+    /* Usamos mask-image para colorear el PNG con el color neón dinámico */
+    background-color: var(--neon-color, #0ff);
+    -webkit-mask-image: url('../img/corona.png');
+    mask-image: url('../img/corona.png');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    filter: drop-shadow(0 0 10px var(--neon-color, #0ff));
+}
+
+.lines-mask {
+    position: absolute;
+    top: -40px;
+    right: -20px;
+    width: 80px;
+    height: 80px;
+    transform: rotate(15deg);
+    /* Color morado neón estático constante */
+    background-color: #B388FF;
+    -webkit-mask-image: url('../img/lineas%20perfil.png');
+    mask-image: url('../img/lineas%20perfil.png');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    filter: drop-shadow(0 0 10px #B388FF);
+}
+
+.lines-bottom-mask {
+    position: absolute;
+    bottom: -80px;
+    right: -30px;
+    width: 120px;
+    height: 120px;
+    transform: rotate(0deg);
+    /* Color morado neón estático constante */
+    background-color: #B388FF;
+    -webkit-mask-image: url('../img/lineas_abajo.png');
+    mask-image: url('../img/lineas_abajo.png');
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    filter: drop-shadow(0 0 10px #B388FF);
+}
+
+.avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+}
+
+/* Tablero de Información */
+.info-card {
+    background-color: #FFFDF0 !important;
+    border: 8px solid #9B72CF; /* Mismo color morado del botón de cerrar sesión */
+    border-radius: 40px;
+    padding: 50px 70px;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+    position: relative;
+    display: block;
+    width: auto;
+    height: auto;
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 12px; right: 12px; bottom: 12px;
+    border: 3px dashed #DCCCA9;
+    border-radius: 30px;
+    pointer-events: none;
+}
+
+/* Badges decorativos */
+.badge-star-img {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 80px;
+    width: auto;
+    z-index: 5;
+    filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+}
+
+
+
+.badge-paw {
+    position: absolute;
+    bottom: 5px;
+    right: -5px;
+    width: 65px;
+    height: auto;
+    filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+    z-index: 5;
+    transform: rotate(-45deg);
+}
+
+/* Botón Editar Pill */
+.edit-row {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-top: 0;
+}
+
+#player-name-container {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.label-text {
+    font-family: 'Luckiest Guy', cursive !important;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+#player-name-text {
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 600;
+    font-size: 2rem;
+    color: #000;
+    margin: 0;
+}
+
+.input-edit-name {
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 600;
+    font-size: 1.8rem;
+    border: 3px dashed #C4A6E6;
+    border-radius: 12px;
+    padding: 8px 15px;
+    outline: none;
+    background: white;
+    width: 220px;
+}
+
+.btn-edit-info {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-edit-info img {
+    height: 40px; /* Tamaño del icono */
+    width: auto;
+}
+
+.btn-edit-info:active {
+    transform: scale(0.9);
+}
+
+.logout-wrapper {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+.btn-logout-link {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer;
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+.btn-logout-link img {
+    width: 180px;
+    height: auto;
+}
+
+.btn-logout-link:hover { transform: scale(1.05); }
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+}
+
+::-webkit-scrollbar { display: none; }
+

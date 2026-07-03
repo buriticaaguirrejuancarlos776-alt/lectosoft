@@ -1,0 +1,298 @@
+:root {
+    --bg-color: #1e293b;
+    --card-bg: rgba(30, 41, 59, 0.85);
+    --accent-blue: #38bdf8;
+    --accent-purple: #818cf8;
+    --text-main: #f8fafc;
+    --text-dim: #cbd5e1;
+    --danger-color: #ef4444;
+}
+
+body.light-mode {
+    --bg-color: #f8fafc;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --accent-blue: #0284c7;
+    --accent-purple: #4f46e5;
+    --text-main: #0f172a;
+    --text-dim: #475569;
+    --border-color: rgba(0, 0, 0, 0.15);
+    --danger-color: #dc2626;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.15) 0px, transparent 50%);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    background-attachment: fixed;
+}
+
+/* Decoración de fondo */
+.bg-decoration {
+    display: none;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px 20px;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.brand {
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.brand span {
+    color: var(--accent-blue);
+    font-weight: 400;
+}
+
+.btn-back {
+    text-decoration: none;
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    border: 1px solid var(--border-color);
+    font-weight: 600;
+}
+
+.btn-back:hover {
+    background: var(--accent-blue);
+    color: var(--bg-color);
+    border-color: var(--accent-blue);
+    transform: translateX(-5px);
+}
+
+/* Encabezado */
+.welcome-header {
+    margin: 60px 0;
+    text-align: left;
+}
+
+.welcome-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.welcome-header h1 span {
+    color: var(--accent-blue);
+}
+
+/* FORMULARIO */
+.formulario-seccion {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.formulario-seccion h2 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    text-align: left;
+    color: var(--accent-blue);
+    letter-spacing: 1px;
+}
+
+.formulario-seccion form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formulario-seccion input,
+.formulario-seccion select {
+    padding: 14px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: rgba(30, 41, 59, 0.5) !important;
+    color: var(--text-main) !important;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.formulario-seccion input:focus,
+.formulario-seccion select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    background: rgba(30, 41, 59, 0.8) !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+}
+
+.formulario-seccion select option {
+    background-color: #1e293b !important;
+    color: var(--text-main) !important;
+}
+
+.formulario-seccion input::placeholder {
+    color: var(--text-dim);
+}
+
+.formulario-seccion img {
+    max-width: 150px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,210,255,0.3);
+}
+
+.btn-accion {
+    padding: 14px;
+    background: var(--accent-blue);
+    color: var(--bg-color);
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-accion:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,210,255,0.3);
+}
+
+/* GRID DE PUZZLES */
+.grid-puzzles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 35px;
+}
+
+.card-admin {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.card-admin::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(56, 189, 248, 0.05));
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.card-admin:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent-blue);
+    box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15);
+}
+
+.card-admin:hover::before {
+    opacity: 1;
+}
+
+.card-admin img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.card-admin p {
+    padding: 20px;
+    margin: 0;
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+}
+
+.card-admin p:last-child {
+    font-size: 16px !important;
+    color: var(--accent-blue) !important;
+    opacity: 1 !important;
+    font-weight: 700 !important;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    padding: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-edit,
+.btn-del {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-edit {
+    background: rgba(0, 210, 255, 0.2);
+    color: var(--accent-blue);
+    border: 1px solid var(--accent-blue);
+}
+
+.btn-edit:hover {
+    background: var(--accent-blue);
+    color: var(--bg-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 210, 255, 0.3);
+}
+
+.btn-del {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.btn-del:hover {
+    background: var(--danger-color);
+    color: white;
+    transform: translateY(-2px);
+}
+

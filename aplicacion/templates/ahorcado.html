@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahorcado Panda - Fixed Edition</title>
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/ahorcado.css' %}?v=6">
+</head>
+
+<body>
+    <!-- BOTON DE MUTE -->
+    <div id="btn-mute" onclick="toggleMute()" style="position: absolute; top: 30px; right: 30px; width: 60px; height: 60px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s; z-index: 100;">
+        <span id="mute-icon" style="font-size: 24px;">🔊</span>
+    </div>
+
+    <!-- Modal de Resultados -->
+    <div id="modal-resultado" class="modal-result-overlay">
+        <div class="modal-result-box">
+            <h2 id="modal-res-titulo">¡GENIAL!</h2>
+            <p id="modal-res-mensaje"></p>
+            <button class="btn-result" onclick="cerrarModalResultado()">CONTINUAR</button>
+        </div>
+    </div>
+
+    <div id="modal-tiempo" class="modal-result-overlay">
+        <div class="modal-result-box">
+            <h2 id="modal-tiempo-titulo" style="color: #ff7675; text-shadow: 0 0 20px rgba(255,118,117, 0.5);">¡TIEMPO AGOTADO!</h2>
+            <p id="modal-tiempo-mensaje" style="font-size: 1.2rem; margin-bottom: 5px;">Se te acabó el tiempo para responder la pregunta.</p>
+            <p style="font-size: 1.3rem; color: #ff7675; font-weight: bold; margin-bottom: 25px;">Penalización: -50 puntos</p>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <button class="btn-result" style="background: #3498db; font-size: 1rem; padding: 15px;" onclick="opcionReiniciar()">VOLVER A LEER DESDE EL PRINCIPIO</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="stat-item">PUNTOS<br><span id="puntos">{{ puntos|default:0 }}</span></div>
+        <div class="stat-item" style="position: relative; margin-bottom: 40px;">
+            TIEMPO<br><span id="tiempo">02:00</span>
+            <img src="{% static 'inicio_sesion/img/tiempo.png' %}"
+                style="position: absolute; bottom: -50px; width: 100px; left: 50%; transform: translateX(-50%); z-index: 11;">
+        </div>
+        <div class="stat-item" style="position: relative; margin-top: 40px;">
+            VIDAS<br><span id="oportunidades">6</span>
+        </div>
+    </div>
+
+    <div class="master-wrapper">
+        <div class="ui-area">
+            <div class="pregunta-box" id="pregunta-text">CARGANDO...</div>
+            <div class="word-display" id="word-box">______</div>
+
+            <div class="game-layout">
+                <div class="visual-area">
+                    <div class="panda-body-container">
+                        <img src="{% static 'inicio_sesion/img/cabezapanda.png' %}" id="part-0" class="panda-part"
+                            style="z-index: 9;">
+                        <img src="{% static 'inicio_sesion/img/manoladoizquierdo.png' %}" id="part-1" class="panda-part"
+                            style="z-index: 8;">
+                        <img src="{% static 'inicio_sesion/img/manoladoderecho.png' %}" id="part-2" class="panda-part"
+                            style="z-index: 8;">
+                        <img src="{% static 'inicio_sesion/img/cuerpopanda.png' %}" id="part-3" class="panda-part"
+                            style="z-index: 7;">
+                        <img src="{% static 'inicio_sesion/img/piesladoizquierdo.png' %}" id="part-4" class="panda-part"
+                            style="z-index: 6;">
+                        <img src="{% static 'inicio_sesion/img/piesladoderecho.png' %}" id="part-5" class="panda-part"
+                            style="z-index: 6;">
+                    </div>
+
+                </div>
+
+                <div class="keyboard-layout" id="keyboard">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-sidebar">
+        <div class="token-box">
+            FICHAS<br>OBTENIDAS
+            <span id="fichas">{{ fichas|default:0 }}</span>
+        </div>
+    </div>
+
+    <script>
+        window.gameConfig = {
+            puntos: Number("{{ puntos|default:0 }}") || 0,
+            fichas: Number("{{ fichas|default:0 }}") || 0,
+            nombreJugador: "{{ nombre_jugador|default:'' }}"
+        };
+    </script>
+    <script src="{% static 'inicio_sesion/js/ahorcado.js' %}?v=14"></script>
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1450; // Ancho base sumando todos los sidebars y el centro
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.height = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+            document.body.style.overflowY = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100vw';
+            document.body.style.height = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+</body>
+</html>

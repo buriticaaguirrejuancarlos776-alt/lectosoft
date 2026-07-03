@@ -1,0 +1,5 @@
+ID: 34, Titulo: caperucita, Cuento: None, Tipo: RETO
+ID: 40, Titulo: patito feo, Cuento: None, Tipo: RETO
+ID: 46, Titulo: el principito, Cuento: None, Tipo: RETO
+ID: 72, Titulo: Rompecabezas de soldado, Cuento: None, Tipo: RETO
+ID: 73, Titulo: Rompecabezas de soldaitooo, Cuento: None, Tipo: RETO

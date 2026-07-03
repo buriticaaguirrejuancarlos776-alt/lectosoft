@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft - Bosque Mágico</title>
+    
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/primera_pagina.css' %}?v=4">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nerko+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="hojas-container">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h1">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h2">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h3">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h4">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h5">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h6">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h7">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h8">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h9">
+        <img src="{% static 'inicio_sesion/img/hojas_banbu.png' %}" class="hoja-cae h10">
+    </div>
+
+    <div class="tree-container trunk-left">
+        <img src="{% static 'inicio_sesion/img/banbu_izquierdo.png' %}" class="img-tronco" alt="Bambú">
+    </div>
+    <div class="tree-container trunk-right">
+        <img src="{% static 'inicio_sesion/img/banbu_derecho.png' %}" class="img-tronco" alt="Bambú">
+    </div>
+
+    <div id="panda-down" class="panda-hugging panda-left">
+        <img src="{% static 'inicio_sesion/img/panda_principal.png' %}" alt="Panda">
+    </div>
+
+    <div id="panda-up" class="panda-hugging panda-right">
+        <img src="{% static 'inicio_sesion/img/panda_principal.png' %}" style="transform: scaleX(-1);" alt="Panda">
+    </div>
+
+    <section class="titulo">
+        <h1><img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Logo Lectosoft"></h1>
+    </section>
+
+    <section class="info-lectosoft">
+        <div class="card info">
+            <h3>¿Qué es Lectosoft?</h3>
+            <p>Lectosoft es una plataforma educativa infantil que convina cuentos, juegos y actividades interactivas para hacer el aprendizaje una aventura divertida.</p>
+        </div>
+    </section>
+
+    <section class="mensajes">
+        <div class="card rojo">
+            <img src="{% static 'inicio_sesion/img/oso_izquierda.png' %}" class="oso izquierda" alt="Oso Izquierdo">
+            <p>Cuentos que despiertan la imaginación y el amor por los libros.</p>
+        </div>
+
+        <div class="card verde">
+            <img src="{% static 'inicio_sesion/img/oso_derecha.png' %}" class="oso derecha" alt="Oso Derecho">
+            <p>Juegos que mejoran la memoria,la atención y la lógica. </p>
+        </div>
+    </section>
+
+
+    <section class="juego">
+        <h2><img src="{% static 'inicio_sesion/img/DIVIERTETE.png' %}" alt="Diviértete"></h2>
+        
+        <div class="opciones">
+            <a href="/login/" class="opcion" style="text-decoration: none; color: inherit; cursor: pointer;">
+                <img src="{% static 'inicio_sesion/img/libro.png' %}" alt="Libro">
+                <p>LEYENDO</p>
+            </a>
+            <a href="/login/" class="opcion" style="text-decoration: none; color: inherit; cursor: pointer;">
+                <img src="{% static 'inicio_sesion/img/rompecabeza.png' %}" alt="Armando">
+                <p>ARMANDO</p>
+            </a>
+            <a href="/login/" class="opcion" style="text-decoration: none; color: inherit; cursor: pointer;">
+                <img src="{% static 'inicio_sesion/img/ahorcado.png' %}" alt="Pensando">
+                <p>JUGANDO</p>
+            </a>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="/login/" class="btn-jugar">
+                <span style="font-size: 0.9em; margin-right: 10px;">▶</span> JUGAR
+            </a>
+        </div>
+    </section>
+
+    <footer style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; position: relative; z-index: 100;">
+        <div class="footer-left">
+            <img src="{% static 'inicio_sesion/img/LogoSena.png' %}" alt="SENA">
+        </div>
+        <div class="footer-center" style="text-align: center; color: white; font-family: 'Luckiest Guy', sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); font-size: 16px; letter-spacing: 1px;">
+            <p style="margin: 0; padding-bottom: 5px;">¡CONTÁCTANOS!</p>
+            <p style="margin: 0; font-family: 'Nerko One', cursive; font-size: 20px; color: #ffeb3b;">Medellín, Colombia</p>
+            <p style="margin: 0; font-family: 'Nerko One', cursive; font-size: 18px;">mindforge@gmail.com</p>
+            <p style="margin: 0; font-family: 'Nerko One', cursive; font-size: 18px; color: #4ade80;">+57 300 000 0000</p>
+        </div>
+        <div class="footer-right">
+            <img src="{% static 'inicio_sesion/img/MINDFORGE.png' %}" alt="Mindforge">
+        </div>
+    </footer>
+
+    <!-- BOTÓN FLOTANTE MANUAL DE USUARIO -->
+    <style>
+        .btn-flotante-manual {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #ff9800; /* Naranja amigable */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-family: 'Luckiest Guy', sans-serif;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 9999;
+            border: 3px solid white;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .btn-flotante-manual:hover {
+            transform: scale(1.1);
+            background-color: #f57c00;
+            color: white;
+        }
+    </style>
+    <a href="{% url 'manual_usuario' %}" class="btn-flotante-manual" title="Ver Manual de Usuario">
+        ?
+    </a>
+
+    <script src="{% static 'inicio_sesion/js/principal.js' %}"></script>
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

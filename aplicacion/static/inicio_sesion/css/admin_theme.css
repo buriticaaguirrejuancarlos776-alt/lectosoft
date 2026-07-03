@@ -1,0 +1,174 @@
+/* =========================================
+   MODO CLARO PARA ADMINISTRADOR
+   ========================================= */
+
+body.light-mode {
+    background-color: #f1f5f9 !important; /* Tailwind slate-100 */
+    color: #0f172a !important; /* Tailwind slate-900 */
+}
+
+/* Sidebar */
+body.light-mode .sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid rgba(0,0,0,0.1) !important;
+}
+
+body.light-mode .sidebar-link {
+    color: #475569 !important;
+}
+
+body.light-mode .sidebar-link:hover {
+    background: rgba(0,0,0,0.05) !important;
+    color: #0f172a !important;
+}
+
+body.light-mode .sidebar-link.active {
+    background: rgba(59, 130, 246, 0.1) !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+    color: #2563eb !important;
+}
+
+/* Main Content Headings & Text */
+body.light-mode h1, 
+body.light-mode h2, 
+body.light-mode h3 {
+    color: #0f172a !important;
+}
+
+body.light-mode p {
+    color: #475569 !important;
+}
+
+/* OBLIGAR A QUE LOS TEXTOS BLANCOS EN LÍNEA SE VUELVAN OSCUROS */
+body.light-mode [style*="color: white"],
+body.light-mode [style*="color: #f8fafc"] {
+    color: #0f172a !important;
+}
+
+/* OBLIGAR A QUE LOS TEXTOS GRISES CLAROS SE VUELVAN GRIS OSCURO */
+body.light-mode [style*="color: #94a3b8"] {
+    color: #475569 !important;
+}
+
+/* OSCURECER COLORES DE ACENTO PASTEL PARA MEJOR LECTURA EN FONDO BLANCO */
+body.light-mode [style*="color: #38bdf8"],
+body.light-mode [style*="color: #60a5fa"] { color: #0284c7 !important; } /* Azules */
+
+body.light-mode [style*="color: #10b981"],
+body.light-mode [style*="color: #34d399"] { color: #059669 !important; } /* Verdes */
+
+body.light-mode [style*="color: #fbbf24"] { color: #d97706 !important; } /* Amarillos/Naranjas */
+
+body.light-mode [style*="color: #c084fc"],
+body.light-mode [style*="color: #a855f7"] { color: #9333ea !important; } /* Morados */
+
+/* Excepción: Botones o elementos de alerta que deban conservar su texto blanco */
+body.light-mode button[style*="color: white"],
+body.light-mode a[style*="color: white"] {
+    color: white !important;
+}
+
+/* Ambient Light Blur (Make it softer in light mode) */
+body.light-mode .ambient-light {
+    opacity: 0.3;
+}
+
+/* Topbar Toggle Switch Container */
+body.light-mode .theme-toggle-container {
+    background: #e2e8f0 !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+}
+
+/* Cards (Module, Stat, Player, etc) */
+body.light-mode .module-card, 
+body.light-mode .stat-card,
+body.light-mode .player-card,
+body.light-mode .content-card,
+body.light-mode .filter-card,
+body.light-mode .table-container,
+body.light-mode table {
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+}
+
+/* Forzar contenedores oscuros anidados a ser claros */
+body.light-mode [style*="background: #1e293b"],
+body.light-mode [style*="background: #0f172a"] {
+    background: #ffffff !important;
+}
+
+/* Corrección de Botones en Panel Principal (Mejor Contraste) */
+body.light-mode .btn-cuentos { background: rgba(59, 130, 246, 0.15) !important; color: #2563eb !important; }
+body.light-mode .btn-rompe { background: rgba(34, 197, 94, 0.15) !important; color: #16a34a !important; }
+body.light-mode .btn-juga { background: rgba(168, 85, 247, 0.15) !important; color: #9333ea !important; }
+body.light-mode .btn-repo { background: rgba(20, 184, 166, 0.15) !important; color: #0d9488 !important; }
+
+/* Player Card Specifics */
+body.light-mode .player-card div {
+    color: #475569 !important; /* Muted text inside player card */
+}
+
+body.light-mode .player-card h3 {
+    color: #0f172a !important;
+}
+
+/* Stats inside player card override */
+body.light-mode .player-card .stat-highlight {
+    color: #d97706 !important; /* Amber for stars */
+}
+
+/* Tables and Lists */
+body.light-mode th {
+    background: #f8fafc !important;
+    color: #334155 !important;
+    border-bottom: 2px solid rgba(0,0,0,0.1) !important;
+}
+
+body.light-mode td {
+    color: #475569 !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+/* Modals */
+body.light-mode #custom-modal > div,
+body.light-mode #modal-codigo > div {
+    background: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+
+body.light-mode #custom-modal h3,
+body.light-mode #modal-codigo h3 {
+    color: #0f172a !important;
+}
+
+body.light-mode #custom-modal p {
+    color: #475569 !important;
+}
+
+/* Modal code display */
+body.light-mode #codigo-valor {
+    color: #0f172a !important;
+}
+
+body.light-mode #modal-codigo .code-container {
+    background: #f1f5f9 !important;
+    border: 1px dashed rgba(52, 211, 153, 0.5) !important;
+}
+
+/* Inputs and Forms */
+body.light-mode input[type="text"],
+body.light-mode input[type="file"],
+body.light-mode input[type="number"],
+body.light-mode select,
+body.light-mode textarea {
+    background: #f8fafc !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    color: #0f172a !important;
+}
+
+/* Stats specific coloring */
+body.light-mode .stat-number {
+    color: #0f172a !important;
+}

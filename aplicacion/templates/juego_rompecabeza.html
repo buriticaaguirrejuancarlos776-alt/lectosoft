@@ -1,0 +1,690 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft | Rompecabezas</title>
+
+    <!-- Librerías Necesarias -->
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+    <script src="https://flbulgarelli.github.io/headbreaker/js/headbreaker.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Montserrat:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.55)),
+                url("{% static 'inicio_sesion/img/fondo_infantil_nuevo.png' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            image-rendering: high-quality;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            width: 70vw;
+            height: 75vh;
+            margin-left: 8vw; /* Lo corre hacia la derecha para hacer espacio a la imagen lateral */
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.4);
+            border: 4px solid #333333;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        #puzzle {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .btn-control {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 2500;
+            background: rgba(255, 255, 255, 0.4);
+            border: 3px solid #333333;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: black;
+            padding: 10px 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 900;
+            transition: 0.3s;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .btn-control:hover {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Overlay de victoria */
+        #victory-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(10px);
+        }
+
+        #start-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2100;
+            backdrop-filter: blur(10px);
+            transition: opacity 0.5s ease;
+        }
+
+        #start-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #victory-overlay.active {
+            display: flex;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .victory-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+        }
+
+        .victory-card h2 {
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #FFD700;
+        }
+
+        .btn-action {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 40px;
+            background: #FFD700;
+            color: #333;
+            font-weight: 900;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: 0.3s;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Barra de estado */
+        #status-bar {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 700;
+            z-index: 3000;
+            border: 2px solid rgba(255,215,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .status-icon { font-size: 20px; }
+        .status-text span { color: #FFD700; }
+
+        /* Decoración Lateral Izquierda */
+        .decoracion-lateral-izq {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: auto;
+            z-index: 2000; /* Debajo del botón (2500) pero sobre el fondo */
+            object-fit: cover;
+            pointer-events: none; /* Permite hacer clic en el botón a través de la imagen si hay espacio transparente */
+            filter: drop-shadow(5px 0 15px rgba(0,0,0,0.4));
+        }
+
+        /* Decoración Arbusto Inferior Derecho */
+        .decoracion-arbusto {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            height: 40vh; /* Ajustable para enfocar la zona inferior */
+            max-width: 40vw;
+            z-index: 3000; /* Ahora queda por encima del contenedor del rompecabezas */
+            object-fit: cover;
+            object-position: bottom right; /* Enfoca la esquina inferior derecha */
+            pointer-events: none;
+            mix-blend-mode: multiply; /* Elimina mágicamente el fondo blanco del JPG */
+        }
+
+        /* Decoración Columpio (Liana + Mono) */
+        .columpio-mono {
+            position: fixed;
+            top: -20px;
+            right: -2vw;
+            width: 15vw;
+            min-width: 150px;
+            max-width: 250px;
+            height: 70vh;
+            z-index: 1500;
+            pointer-events: none;
+            transform-origin: top center;
+            animation: balanceo-liana 5s ease-in-out infinite;
+        }
+
+        .img-liana {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
+        }
+
+        .img-mono {
+            position: absolute;
+            bottom: 5%; /* Lo ubica cerca de la parte baja de la liana */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150%; /* Más grande que la liana para que resalte */
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6));
+        }
+
+        @keyframes balanceo-liana {
+            0% { transform: rotate(-6deg); }
+            50% { transform: rotate(6deg); }
+            100% { transform: rotate(-6deg); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Audio de fondo relajante (Bosque/Naturaleza) -->
+    <audio id="bg-music" src="https://upload.wikimedia.org/wikipedia/commons/e/ec/Forest_birds.ogg" loop preload="auto"></audio>
+
+    <a href="/rompecabeza" class="btn-control">⬅ VOLVER</a>
+
+    <div class="container">
+
+        <div id="puzzle"></div>
+
+        <div id="start-overlay">
+            <div style="position: relative; background: #fffdf6; padding: 40px 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); text-align: center; width: 650px; max-width: 90%; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 20px solid #fdf2e9; font-family: 'Fredoka One', cursive;">
+                <div style="border: 4px dotted #ffb142; border-radius: 30px; padding: 30px 20px; position: relative; background: #fffdf6;">
+                    
+                    <div style="position: absolute; top: -10px; left: -10px; font-size: 30px;">🧩</div>
+                    <div style="position: absolute; top: 10px; right: -15px; font-size: 35px;">🧩</div>
+                    <div style="position: absolute; bottom: -15px; right: 10px; font-size: 25px;">🧩</div>
+                    <div style="position: absolute; bottom: -20px; left: -5px; font-size: 25px;">🧩</div>
+
+                    <h2 style="font-size: 45px; color: #ffb4a2; margin-bottom: 25px; letter-spacing: 1px; text-shadow: -2px -2px 0 #e56b6f, 2px -2px 0 #e56b6f, -2px 2px 0 #e56b6f, 2px 2px 0 #e56b6f, 0 4px 0 #e56b6f;">
+                        ROMPECABEZAS
+                    </h2>
+                    
+                    {% if fichas_desbloqueadas == 0 %}
+                    <div style="font-size: 26px; color: #2d5a27; margin-bottom: 35px; line-height: 1.5; font-family: 'Fredoka One', cursive;">
+                        ¡Aún no tienes piezas desbloqueadas! <br>
+                        <span style="font-size: 18px; color: #2d5a27; display: inline-block; margin-top: 10px; font-family: 'Fredoka One', cursive;">Lee el cuento para conseguir piezas.</span>
+                    </div>
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                        <a href="/rompecabeza" style="text-decoration: none; display: inline-block; background: #fbdc69; border: none; border-radius: 30px; color: white; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 15px 35px; cursor: pointer; box-shadow: 0 8px 0 #d4b548; text-transform: uppercase; transition: transform 0.1s, box-shadow 0.1s; position: relative; overflow: hidden; -webkit-text-stroke: 1px rgba(0,0,0,0.1); text-shadow: 1px 1px 0px rgba(0,0,0,0.1);"
+                            onmousedown="this.style.transform='translateY(5px)'; this.style.boxShadow='0 3px 0 #d4b548';" 
+                            onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';" 
+                            onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';">
+                            <div style="position: absolute; top: 8px; left: 15px; width: 20px; height: 10px; background: rgba(255,255,255,0.7); border-radius: 10px; transform: rotate(-10deg);"></div>
+                            VOLVER
+                        </a>
+                        {% if url_lectura %}
+                        <a href="{{ url_lectura }}" style="text-decoration: none; display: inline-block; background: #8ebce6; border: none; border-radius: 30px; color: white; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 15px 35px; cursor: pointer; box-shadow: 0 8px 0 #6a9ac4; text-transform: uppercase; transition: transform 0.1s, box-shadow 0.1s; position: relative; overflow: hidden; -webkit-text-stroke: 1px rgba(0,0,0,0.1); text-shadow: 1px 1px 0px rgba(0,0,0,0.1);"
+                            onmousedown="this.style.transform='translateY(5px)'; this.style.boxShadow='0 3px 0 #6a9ac4';" 
+                            onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #6a9ac4';" 
+                            onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #6a9ac4';">
+                            <div style="position: absolute; top: 8px; left: 15px; width: 20px; height: 10px; background: rgba(255,255,255,0.7); border-radius: 10px; transform: rotate(-10deg);"></div>
+                            LEER
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div style="font-size: 26px; color: #2d5a27; margin-bottom: 35px; line-height: 1.5; font-family: 'Fredoka One', cursive;">
+                        ¿Listo para armarlo lo más rápido posible?
+                    </div>
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                        <button id="btn-start" style="background: #fbdc69; border: none; border-radius: 30px; color: white; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 15px 35px; cursor: pointer; box-shadow: 0 8px 0 #d4b548; text-transform: uppercase; transition: transform 0.1s, box-shadow 0.1s; position: relative; overflow: hidden; -webkit-text-stroke: 1px rgba(0,0,0,0.1); text-shadow: 1px 1px 0px rgba(0,0,0,0.1);"
+                            onmousedown="this.style.transform='translateY(5px)'; this.style.boxShadow='0 3px 0 #d4b548';" 
+                            onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';" 
+                            onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';">
+                            <div style="position: absolute; top: 8px; left: 15px; width: 20px; height: 10px; background: rgba(255,255,255,0.7); border-radius: 10px; transform: rotate(-10deg);"></div>
+                            ¡COMENZAR!
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div id="victory-overlay">
+            <div style="position: relative; background: #fffdf6; padding: 40px 30px; border-radius: 40px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); text-align: center; width: 650px; max-width: 90%; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 20px solid #fdf2e9; font-family: 'Fredoka One', cursive;">
+                <div style="border: 4px dotted #ffb142; border-radius: 30px; padding: 30px 20px; position: relative; background: #fffdf6;">
+                    
+                    <div style="position: absolute; top: -10px; left: -10px; font-size: 30px; color: #e1b12c;">✨</div>
+                    <div style="position: absolute; top: 10px; right: -15px; font-size: 35px; color: #e1b12c;">✨</div>
+                    <div style="position: absolute; bottom: -15px; right: 10px; font-size: 25px; color: #e1b12c;">✨</div>
+                    <div style="position: absolute; bottom: -20px; left: -5px; font-size: 25px; color: #e1b12c;">✨</div>
+
+                    <h2 style="font-size: 45px; color: #ffb4a2; margin-bottom: 25px; letter-spacing: 1px; text-shadow: -2px -2px 0 #e56b6f, 2px -2px 0 #e56b6f, -2px 2px 0 #e56b6f, 2px 2px 0 #e56b6f, 0 4px 0 #e56b6f;">
+                        ¡MÁGICO!
+                    </h2>
+                    
+                    <div style="font-size: 26px; color: #2d5a27; margin-bottom: 35px; line-height: 1.5; font-family: 'Fredoka One', cursive;">
+                        Has completado el rompecabezas con éxito.
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                        <a href="/rompecabeza" style="text-decoration: none; display: inline-block; background: #fbdc69; border: none; border-radius: 30px; color: white; font-family: 'Fredoka One', cursive; font-size: 22px; padding: 15px 35px; cursor: pointer; box-shadow: 0 8px 0 #d4b548; text-transform: uppercase; transition: transform 0.1s, box-shadow 0.1s; position: relative; overflow: hidden; -webkit-text-stroke: 1px rgba(0,0,0,0.1); text-shadow: 1px 1px 0px rgba(0,0,0,0.1);"
+                            onmousedown="this.style.transform='translateY(5px)'; this.style.boxShadow='0 3px 0 #d4b548';" 
+                            onmouseup="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';" 
+                            onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 0 #d4b548';">
+                            <div style="position: absolute; top: 8px; left: 15px; width: 20px; height: 10px; background: rgba(255,255,255,0.7); border-radius: 10px; transform: rotate(-10deg);"></div>
+                            JUGAR OTRO
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Decoración Lateral Izquierda (Panel) -->
+    <img src="{% static 'inicio_sesion/img/parte.png' %}" alt="Decoración Izquierda" class="decoracion-lateral-izq">
+
+    <!-- Decoración Inferior Derecha (Arbusto y Hongos) -->
+    <img src="{% static 'inicio_sesion/img/parte_fondo.jpg' %}" alt="Arbusto" class="decoracion-arbusto">
+
+    <!-- Decoración Lateral Derecha (Liana y Mono) -->
+    <div class="columpio-mono">
+        <img src="{% static 'inicio_sesion/img/lia.png' %}" alt="Liana" class="img-liana">
+        <img src="{% static 'inicio_sesion/img/mono.png' %}" alt="Mono" class="img-mono">
+    </div>
+
+    <!-- Barra de estado de piezas y tiempo -->
+    <div id="status-bar" {% if puzzle.tipo == 'LIBRE' %}style="display: none;"{% endif %}>
+        <span class="status-icon">🧩</span>
+        <div class="status-text">
+            PIEZAS: <span id="pieces-count">0</span> / <span id="total-pieces">0</span>
+        </div>
+        <div style="width: 2px; height: 20px; background: rgba(255,255,255,0.3); margin: 0 10px;"></div>
+        <span class="status-icon">⏱️</span>
+        <div class="status-text" style="min-width: 55px; text-align: center;">
+            <span id="timer-display" style="color: #fff;">00:00</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const imgUrl = "{{ puzzle.imagen.url }}";
+            const dificultad = parseInt("{{ dificultad }}") || 3;
+
+            // Lógica para reproducir el sonido al primer clic (por políticas de los navegadores)
+            const bgMusic = document.getElementById('bg-music');
+            bgMusic.volume = 0.3; // Volumen suave
+            let audioIniciado = false;
+            
+            let startTime = null;
+            let movimientosTotales = 0;
+            let movimientosCorrectos = 0;
+            let timerInterval = null;
+
+            function updateTimer() {
+                if (!startTime) return;
+                const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsedSeconds / 60).toString().padStart(2, '0');
+                const seconds = (elapsedSeconds % 60).toString().padStart(2, '0');
+                const timerDisplay = document.getElementById('timer-display');
+                if(timerDisplay) timerDisplay.innerText = `${minutes}:${seconds}`;
+            }
+
+            const startBtn = document.getElementById('btn-start');
+            const startOverlay = document.getElementById('start-overlay');
+            
+            if (startBtn) {
+                startBtn.addEventListener('click', () => {
+                    startOverlay.classList.add('hidden');
+                    startTime = Date.now();
+                    timerInterval = setInterval(updateTimer, 1000);
+                    setTimeout(() => { startOverlay.style.display = 'none'; }, 500); // Wait for transition
+                });
+            }
+
+            document.body.addEventListener('mousedown', () => {
+                if (!audioIniciado) {
+                    bgMusic.play().catch(e => console.log("Audio autoplay bloqueado:", e));
+                    audioIniciado = true;
+                }
+            });
+
+            const puzzleImage = new Image();
+            puzzleImage.src = imgUrl;
+
+            puzzleImage.onload = () => {
+                const container = document.querySelector('.container');
+                const width = container.offsetWidth;
+                const height = container.offsetHeight;
+
+                const puzzle = new headbreaker.Canvas('puzzle', {
+                    width: width,
+                    height: height,
+                    pieceSize: Math.min(width, height) / (dificultad + 1),
+                    proximity: 30,
+                    borderFill: 10,
+                    strokeWidth: 2,
+                    strokeColor: '#ffffff',
+                    lineSoftness: 0.18,
+                    imageNoise: 0.02,
+                    image: puzzleImage,
+                    outline: new headbreaker.outline.Rounded(),
+                    preventOffstageDrag: true,
+                    fixed: true
+                });
+
+                // Generador de sonido interno
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+                function playConnectSound() {
+                    const oscillator = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+                    oscillator.type = 'sine';
+                    oscillator.frequency.setValueAtTime(500, audioCtx.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                    oscillator.start();
+                    oscillator.stop(audioCtx.currentTime + 0.1);
+                }
+
+                function playVictorySound() {
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, i) => {
+                        const osc = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+                        g.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.1);
+                        g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.5);
+                        osc.connect(g);
+                        g.connect(audioCtx.destination);
+                        osc.start(audioCtx.currentTime + i * 0.1);
+                        osc.stop(audioCtx.currentTime + i * 0.1 + 0.5);
+                    });
+                }
+
+                puzzle.adjustImagesToPuzzleHeight();
+
+                puzzle.autogenerate({
+                    horizontalPiecesCount: dificultad,
+                    verticalPiecesCount: dificultad
+                });
+
+                puzzle.shuffle(0.8);
+
+                puzzle.draw();
+
+                // Lógica de Desbloqueo Progresivo (Forzada después del draw)
+                function aplicarBloqueo() {
+                    const fichasDesbloqueadas = parseInt("{{ fichas_desbloqueadas }}") || 0;
+                    const totalPiezas = puzzle.puzzle.pieces.length;
+                    
+                    document.getElementById('pieces-count').innerText = Math.min(fichasDesbloqueadas, totalPiezas);
+                    document.getElementById('total-pieces').innerText = totalPiezas;
+
+                    // Obtenemos todas las piezas y las bloqueamos según el progreso
+                    puzzle.puzzle.pieces.forEach((piece, index) => {
+                        const figure = puzzle.figures[piece.id];
+                        if (figure) {
+                            if (index >= fichasDesbloqueadas) {
+                                // PIEZA TOTALMENTE BLOQUEADA (Casi invisible)
+                                figure.group.draggable(false);
+                                figure.group.opacity(0.05); 
+                                figure.group.listening(false);
+                                figure.shape.stroke('transparent');
+                            } else {
+                                // PIEZA DISPONIBLE
+                                figure.group.draggable(true);
+                                figure.group.opacity(1);
+                                figure.group.listening(true);
+                                figure.shape.stroke('#ffffff');
+                                figure.shape.strokeWidth(2);
+                            }
+                        }
+                    });
+                    puzzle.redraw();
+                }
+
+                // Pequeño retardo para asegurar que el motor de Headbreaker ha terminado de posicionar
+                setTimeout(aplicarBloqueo, 100);
+
+                // Función INFALIBLE para forzar que las piezas estén dentro del contenedor
+                function forcePiecesInside() {
+                    Object.values(puzzle.figures).forEach(figure => {
+                        const group = figure.group;
+                        const box = group.getClientRect();
+                        const pos = group.position();
+
+                        let x = pos.x;
+                        let y = pos.y;
+
+                        const margin = 2; // Margen mínimo
+
+                        // Si el borde izquierdo se sale
+                        if (box.x < margin) x += (margin - box.x);
+                        // Si el borde superior se sale
+                        if (box.y < margin) y += (margin - box.y);
+                        // Si el borde derecho se sale
+                        if (box.x + box.width > width - margin) x -= (box.x + box.width - (width - margin));
+                        // Si el borde inferior se sale
+                        if (box.y + box.height > height - margin) y -= (box.y + box.height - (height - margin));
+
+                        group.position({ x, y });
+                    });
+                    puzzle.redraw();
+                }
+
+                // Función para aplicar límites de movimiento durante el arrastre
+                function applyLimits() {
+                    Object.values(puzzle.figures).forEach(figure => {
+                        figure.group.dragBoundFunc(function (pos) {
+                            const stage = this.getStage();
+                            const stageW = stage.width();
+                            const stageH = stage.height();
+                            const box = this.getClientRect();
+                            const currentPos = this.position();
+                            const offsetX = box.x - currentPos.x;
+                            const offsetY = box.y - currentPos.y;
+
+                            let x = pos.x;
+                            let y = pos.y;
+                            const m = 5;
+
+                            if (x + offsetX < m) x = m - offsetX;
+                            if (x + offsetX + box.width > stageW - m) x = stageW - m - box.width - offsetX;
+                            if (y + offsetY < m) y = m - offsetY;
+                            if (y + offsetY + box.height > stageH - m) y = stageH - m - box.height - offsetY;
+
+                            return { x, y };
+                        });
+                    });
+                }
+
+                applyLimits();
+                forcePiecesInside(); // Forzar después del primer shuffle
+
+                puzzle.onConnect((_piece, figure, _target, targetFigure) => {
+                    movimientosCorrectos++;
+                    playConnectSound();
+                    applyLimits();
+                    forcePiecesInside();
+                    figure.shape.stroke('#FFD700');
+                    figure.shape.strokeWidth(4);
+                    targetFigure.shape.stroke('#FFD700');
+                    targetFigure.shape.strokeWidth(4);
+                    puzzle.redraw();
+                    setTimeout(() => {
+                        figure.shape.stroke('#ffffff');
+                        figure.shape.strokeWidth(2);
+                        targetFigure.shape.stroke('#ffffff');
+                        targetFigure.shape.strokeWidth(2);
+                        puzzle.redraw();
+                    }, 400);
+                });
+
+                // Cambio de cursor dinámico: solo cuando está sobre una ficha
+                Object.values(puzzle.figures).forEach(figure => {
+                    figure.group.on('mouseenter', () => {
+                        document.getElementById('puzzle').style.cursor = 'grab';
+                    });
+                    figure.group.on('mouseleave', () => {
+                        document.getElementById('puzzle').style.cursor = 'default';
+                    });
+                    figure.group.on('mousedown', () => {
+                        document.getElementById('puzzle').style.cursor = 'grabbing';
+                    });
+                    figure.group.on('mouseup', () => {
+                        document.getElementById('puzzle').style.cursor = 'grab';
+                        movimientosTotales++;
+                    });
+                });
+
+                puzzle.attachSolvedValidator();
+                puzzle.onValid(() => {
+                    clearInterval(timerInterval); // Detener el cronómetro
+                    playVictorySound();
+                    guardarVictoria();
+                    setTimeout(() => {
+                        document.getElementById('victory-overlay').classList.add('active');
+                    }, 500);
+                });
+
+                function guardarVictoria() {
+                    const puzzleId = "{{ puzzle.id }}";
+                    const tiempoEmpleado = Math.floor((Date.now() - startTime) / 1000);
+                    
+                    fetch('/api/guardar-progreso/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            puzzle_id: puzzleId,
+                            puntuacion: 100,
+                            historial_rompecabezas: {
+                                tiempo_empleado: tiempoEmpleado,
+                                movimientos_correctos: movimientosCorrectos,
+                                movimientos_totales: movimientosTotales
+                            }
+                        })
+                    }).catch(e => console.error("Error guardando victoria:", e));
+                }
+
+                window.addEventListener('resize', () => {
+                    location.reload();
+                });
+            };
+        });
+    </script>
+
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

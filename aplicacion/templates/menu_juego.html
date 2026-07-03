@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lectosoft</title>
+
+<link rel="stylesheet" href="{% static 'inicio_sesion/css/menu_juego.css' %}">
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<!-- --- DISEÑO LATERAL DE PUNTUACIÓN --- -->
+<div class="lateral-score">
+    <div class="score-icon-container">
+        <img src="{% static 'inicio_sesion/img/estrella_finallectura.png' %}" alt="Puntos" class="score-star">
+    </div>
+    <div class="score-text">
+        <span class="score-label">PUNTOS</span>
+        <span class="score-number">{{ puntuacion|default:0 }}</span>
+    </div>
+</div>
+
+<header class="navbar">
+
+
+<nav class="menu">
+    <a href="{% url 'catalogo' %}" class="btn gray catalogo">
+        <img src="{% static 'inicio_sesion/img/catalogo.png' %}"> CATALOGOS
+    </a>
+    <a href="{% url 'rompecabeza' %}" class="btn green rompecabezas">
+        <img src="{% static 'inicio_sesion/img/rompecabeza_menu.png' %}"> ROMPECABEZA
+    </a>
+    <a href="{% url 'trofeo' %}" class="btn yellow trofeos">
+        <img src="{% static 'inicio_sesion/img/trofeo.png' %}"> TROFEO
+    </a>
+    <a href="{% url 'perfil' %}" class="btn pink perfil">
+        <img id="menu-avatar" src="{% static 'inicio_sesion/img/perfil.png' %}" alt="Perfil"> PERFIL
+    </a>
+</nav>
+
+</header>
+
+
+<section class="mensaje">
+
+<div class="card">
+    <img class="muneco" src="{% static 'inicio_sesion/img/muñequito1.png' %}">
+
+    <h1 id="greeting-text">
+        ¡HOLA AMIGUITO! TE<br>
+        ESTÁBAMOS<br>
+        ESPERANDO PARA<br>
+        JUGAR Y APRENDER.
+    </h1>
+
+</div>
+
+</section>
+
+
+<section class="animales">
+
+<img src="{% static 'inicio_sesion/img/muñequitos2.png' %}">
+
+</section>
+
+        <!-- BOTÓN FLOTANTE MANUAL DE USUARIO -->
+        <style>
+            .btn-flotante-manual {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                background-color: #ff9800;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 36px;
+                font-family: 'Luckiest Guy', sans-serif;
+                text-decoration: none;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                z-index: 9999;
+                border: 3px solid white;
+                transition: transform 0.2s, background-color 0.2s;
+            }
+            .btn-flotante-manual:hover {
+                transform: scale(1.1);
+                background-color: #f57c00;
+                color: white;
+            }
+        </style>
+        <a href="{% url 'manual_usuario' %}" class="btn-flotante-manual" title="Ver Manual de Usuario">
+            ?
+        </a>
+    </div>
+
+    <script>
+    function getJugadorActual() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'jugador_actual') {
+                return decodeURIComponent(value);
+            }
+        }
+        return null;
+    }
+
+    const jugadorActual = getJugadorActual();
+    if (!jugadorActual) {
+        localStorage.removeItem('nombreJugadorLectosoft');
+        window.location.href = '/login/';
+    } else {
+        localStorage.setItem('nombreJugadorLectosoft', jugadorActual);
+    }
+
+    const defaultMenuAvatar = "{% static 'inicio_sesion/img/perfil.png' %}";
+    const menuAvatar = document.getElementById('menu-avatar');
+    const storedName = jugadorActual || 'Lecto';
+    const avatarSeed = encodeURIComponent(storedName);
+    const displayName = storedName;
+
+    if (menuAvatar) {
+        menuAvatar.src = `https://api.dicebear.com/6.x/bottts/svg?seed=${avatarSeed}`;
+        menuAvatar.onerror = () => { menuAvatar.src = defaultMenuAvatar; };
+    }
+
+    const greetingText = document.getElementById('greeting-text');
+    if (greetingText) {
+        greetingText.innerHTML = `¡HOLA ${displayName}!<br>TE<br>ESTÁBAMOS<br>ESPERANDO PARA<br>JUGAR Y APRENDER.`;
+    }
+</script>
+
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

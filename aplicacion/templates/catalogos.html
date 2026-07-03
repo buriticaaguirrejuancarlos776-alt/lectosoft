@@ -1,0 +1,234 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft - Catálogo Interactivo</title>
+
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/menu_juego.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/catalogo.css' %}">
+    
+    <style>
+        .carousel-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            position: relative;
+        }
+
+        .carousel-button {
+            background: #fff;
+            border: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            color: #4facfe;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+            z-index: 5;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-button:hover {
+            transform: scale(1.15) translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .carousel-button:active {
+            transform: scale(0.95) translateY(2px);
+        }
+
+        .carousel-wrapper {
+            flex: 1;
+            overflow-x: hidden;
+            border-radius: 20px;
+            padding: 10px 0;
+            width: 800px;
+            max-width: 100%;
+        }
+
+        .book-selection {
+            display: flex;
+            gap: 40px;
+            padding: 10px 20px;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: fit-content;
+        }
+        
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ESTILOS PAGINACIÓN INFANTIL */
+        .btn-page-infantil {
+            background: #ffeb3b;
+            border: 4px solid #f57f17;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            font-family: 'Luckiest Guy', cursive;
+            color: #d84315;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #f57f17, 0 10px 15px rgba(0,0,0,0.3);
+            transition: all 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn-page-infantil:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #f57f17, 0 8px 10px rgba(0,0,0,0.3);
+            background: #fff59d;
+        }
+        .btn-page-infantil:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #f57f17, 0 4px 5px rgba(0,0,0,0.3);
+        }
+        .btn-page-infantil.active {
+            background: #4facfe;
+            border-color: #0277bd;
+            color: white;
+            box-shadow: 0 6px 0 #0277bd, 0 10px 15px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenedor">
+        
+        <div class="logo-text">
+            <img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Logo">
+        </div>
+
+        <a href="/menu" class="btn-inicio-limpio">
+            <img src="{% static 'inicio_sesion/img/inicio_catalogo.png' %}" alt="Ir al Menú"> 
+        </a>
+
+        <main>
+            <div class="top-content">
+                <h1 class="title">CATALOGOS</h1>
+
+                <div class="search-container">
+                    <div class="search-box">
+                        <img src="{% static 'inicio_sesion/img/lupa.png' %}" style="width: 20px;" alt="Lupa">
+                        <input type="text" id="inputBuscador" placeholder="Buscar Libro..">
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-grid" id="bookGrid" style="margin-top: 40px; margin-bottom: 30px;">
+                {% for libro in libros %}
+                    {% if not libro.es_adicional %}
+                    <div class="book-card {% if not libro.habilitado %}libro-deshabilitado{% endif %}" data-name="{{ libro.titulo|lower }}">
+                        {% if libro.habilitado %}
+                            <a href="{% if 'caperucita' in libro.titulo|lower %}/lectura/{% else %}{{ libro.url_lectura }}{% endif %}">
+                                <img src="{% if libro.imagen %}{{ libro.imagen.url }}{% else %}https://via.placeholder.com/280x380?text={{ libro.titulo|urlencode }}{% endif %}" alt="{{ libro.titulo }}" class="character-img {% if libro.es_generado %}libro-generado-img{% endif %}">
+                            </a>
+                        {% else %}
+                            <div onclick="mostrarMensajeDeshabilitado('{{ libro.titulo }}')" style="cursor: pointer;">
+                                <img src="{% if libro.imagen %}{{ libro.imagen.url }}{% else %}https://via.placeholder.com/280x380?text={{ libro.titulo|urlencode }}{% endif %}" alt="{{ libro.titulo }}" class="character-img {% if libro.es_generado %}libro-generado-img{% endif %}" style="opacity: 0.3; filter: grayscale(1);">
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- CONTENEDOR DE PAGINACIÓN INFANTIL -->
+            <div id="pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 60px;">
+            </div>
+
+        </main>
+
+        <!-- BOTÓN FLOTANTE MANUAL DE USUARIO -->
+        <style>
+            .btn-flotante-manual {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                background-color: #ff9800;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 36px;
+                font-family: 'Luckiest Guy', sans-serif;
+                text-decoration: none;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                z-index: 9999;
+                border: 3px solid white;
+                transition: transform 0.2s, background-color 0.2s;
+            }
+            .btn-flotante-manual:hover {
+                transform: scale(1.1);
+                background-color: #f57c00;
+                color: white;
+            }
+        </style>
+        <a href="{% url 'manual_usuario' %}" class="btn-flotante-manual" title="Ver Manual de Usuario">
+            ?
+        </a>
+    </div>
+
+    <script>
+        function mostrarMensajeDeshabilitado(titulo) {
+            alert("El cuento '" + titulo + "' se encuentra deshabilitado por el momento.");
+        }
+
+        const positions = {};
+
+        function scrollCarousel(trackId, amount) {
+            const track = document.getElementById(trackId);
+            if (!positions[trackId]) positions[trackId] = 0;
+
+            const maxScroll = track.scrollWidth - track.parentElement.clientWidth;
+            positions[trackId] += amount;
+
+            if (positions[trackId] < 0) positions[trackId] = 0;
+            if (positions[trackId] > maxScroll) positions[trackId] = maxScroll;
+
+            track.style.transform = `translateX(-${positions[trackId]}px)`;
+        }
+    </script>
+    <script src="{% static 'inicio_sesion/js/catalogo.js' %}"></script>
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

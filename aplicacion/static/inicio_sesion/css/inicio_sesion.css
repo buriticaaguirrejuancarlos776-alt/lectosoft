@@ -1,0 +1,490 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
+
+
+@font-face {
+
+    font-family: 'Meera Inimai';
+
+    src: url('../fuentes/MeeraInimai.ttf') format('truetype');
+
+}
+
+
+
+* {
+
+    box-sizing: border-box;
+
+    margin: 0;
+
+    padding: 0;
+
+    font-family: 'Fredoka', sans-serif;
+
+}
+
+
+
+
+
+body {
+
+    background-color: #000;
+
+    height: 100vh;
+
+    width: 100vw;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    overflow: hidden;
+
+}
+
+
+
+.marco-exterior {
+
+    width: 90%;
+
+    height: 85%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    position: relative;
+
+    border-radius: 15px;
+
+}
+
+
+
+.background-container {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background-image:
+
+        linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)),
+
+        url("../img/iniciopagina.png");
+
+    background-size: cover;
+
+    background-position: center;
+
+    position: relative;
+
+}
+
+
+
+
+
+.brand-logo {
+
+    position: absolute;
+
+    top: 20px;
+
+    left: 20px;
+
+}
+
+
+
+.brand-logo img {
+
+    height: 120px;
+
+    width: auto;
+
+}
+
+
+
+.login-card {
+    background-color: rgba(143, 163, 132, 0.85); /* Verde salvia original */
+    width: 480px;
+    max-width: 90%;  
+    padding: 60px 40px 50px 40px;
+    border-radius: 40px;
+    position: relative;
+    text-align: center;
+    box-shadow: 
+        inset 0 0 15px rgba(104, 159, 56, 0.2),
+        0 15px 40px rgba(0,0,0,0.3);
+    transition: background-color 0.5s ease;
+    border: 3px solid #e1e9c5;
+}
+
+/* Grass border effect using pseudo-element */
+.login-card::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: -5px;
+    right: -5px;
+    height: 60px;
+    background: radial-gradient(circle at 15px 20px, #7cb342 20px, transparent 21px) 0 0 / 30px 40px,
+                radial-gradient(circle at 15px 25px, #689f38 25px, transparent 26px) 15px -5px / 30px 40px;
+    border-radius: 0 0 40px 40px;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+/* Ensure contents stay above the grass */
+.login-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+
+
+.close-btn-new {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: radial-gradient(circle at 30% 30%, #e53935, #b71c1c);
+    border: 4px solid #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 -3px 5px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.close-btn-new:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.4), inset 0 -3px 5px rgba(0,0,0,0.2);
+}
+
+.close-btn-new .cross {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+
+
+.title-wrapper {
+    margin-bottom: 25px;
+}
+
+.main-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.main-title h2 {
+    font-family: 'Luckiest Guy', cursive;
+    color: #1b2517;
+    margin-bottom: 0;
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+}
+
+.leaf-left, .leaf-right {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #8bc34a;
+    border-radius: 0 20px 0 20px;
+    transform: rotate(45deg);
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+.leaf-right {
+    transform: scaleX(-1) rotate(45deg);
+}
+
+.subtitle {
+    font-family: 'Fredoka', sans-serif;
+    color: #745b41;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: -5px;
+}
+
+
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 15px 50px 15px 25px; /* Menos padding a la izquierda porque ya no hay ícono */
+    border-radius: 50px;
+    border: 2px solid #689f38;
+    background-color: #c5d5b3; /* Verde claro original */
+    font-size: 1.1rem;
+    color: #333 !important;
+    font-family: 'Meera Inimai', sans-serif;
+    text-align: left; /* Alineado a la izquierda */
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.3s;
+}
+
+input:focus {
+    outline: none;
+    background-color: #c5d5b3;
+    border-color: #558b2f;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05), 0 0 10px rgba(104, 159, 56, 0.3);
+}
+
+/* Evitar que el autocompletado del navegador cambie el fondo o el texto */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #c5d5b3 inset !important;
+    -webkit-text-fill-color: #333 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+input::placeholder {
+    color: #888;
+    text-align: left;
+}
+
+.icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left-icon {
+    left: 15px;
+}
+
+.right-icon {
+    right: 15px;
+}
+
+.icon img {
+    width: 22px;
+    height: 22px;
+    opacity: 0.8;
+}
+
+.user-outline img {
+    filter: grayscale(100%) opacity(0.6);
+}
+
+
+
+/* Bloque duplicado eliminado */
+
+
+
+.avatar-wrapper {
+    width: 80px;
+    height: 80px;
+    background-color: #fff;
+    border: 4px solid #8bc34a;
+    border-radius: 50%;
+    margin: -90px auto 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2), inset 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 5;
+}
+
+.avatar-wrapper img {
+    width: 60px;
+    height: 60px;
+}
+
+.btn-jugar-new {
+    background: linear-gradient(to bottom, #8bc34a, #558b2f);
+    border: 3px solid #fff;
+    border-radius: 50px;
+    padding: 10px 30px 10px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3), inset 0 -3px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s, filter 0.2s;
+    margin-top: 10px;
+}
+
+#admin-btn {
+    padding: 10px 30px; /* Padding simétrico porque no tiene logo de huella */
+    justify-content: center;
+}
+
+.btn-jugar-new:hover {
+    transform: scale(1.05) translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.paw-circle {
+    background-color: #fff;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.paw-circle img {
+    width: 30px;
+    height: 30px;
+}
+
+.btn-jugar-new span {
+    color: #fff;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 2rem;
+    letter-spacing: 2px;
+    text-shadow: 1px 2px 3px rgba(0,0,0,0.6);
+}
+
+.badge-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: #fbc02d;
+    border: 2px solid #f57f17;
+    border-radius: 5px 5px 50% 50%;
+    vertical-align: middle;
+    margin-right: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.badge-icon.back-arrow {
+    background: linear-gradient(to bottom, #e53935, #c62828); /* Rojo brillante */
+    border-color: #fff;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+/* Dibujar una flecha hacia la izquierda usando CSS puro */
+.badge-icon.back-arrow::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 7px;
+    width: 5px;
+    height: 5px;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    transform: rotate(-45deg);
+}
+
+/* Animación para el botón de juego */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.login-options {
+    margin-top: 45px;
+    margin-bottom: -30px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.admin-link, .back-link {
+    font-size: 1.1rem;
+    color: #000;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Meera Inimai', sans-serif;
+    font-weight: bold;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+.admin-link:hover, .back-link:hover {
+    color: #333;
+    transform: scale(1.05);
+    filter: none;
+}
+
+.admin-link:active, .back-link:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+/* Modo Administrador */
+.login-card.admin-mode {
+    background-color: rgba(143, 163, 132, 0.95);
+    transition: all 0.5s ease;
+}
+
+.login-card.admin-mode .avatar-preview-container {
+    display: none;
+}
+
+.login-card.admin-mode h2 {
+    color: #000; /* Título ADMINISTRADOR negro puro */
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+.login-card.admin-mode input {
+    background-color: #c5d5b3;
+    color: #222;
+}
+
+.login-card.admin-mode .back-link {
+    color: #000;
+}
+
+.login-card {
+    transition: background-color 0.5s ease;
+}
+
+

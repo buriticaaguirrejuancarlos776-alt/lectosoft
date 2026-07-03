@@ -1,0 +1,107 @@
+:root {
+    --primary-font: 'Fredoka One', cursive;
+}
+
+body {
+    margin: 0;
+    font-family: var(--primary-font);
+    background: #f4f1ea url('../images/bg-soft-animals.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.main-container {
+    width: 90vw;
+    height: 85vh;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Reutilizando el Header de las otras pantallas */
+.header {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.logo-text {
+    font-size: 2.2rem;
+    color: #d19a66;
+    text-shadow: 2px 2px 0px #000;
+}
+
+.btn-inicio {
+    position: absolute;
+    right: 0;
+    background: #a3d8f4;
+    border: 3px solid #000;
+    border-radius: 30px;
+    padding: 8px 18px;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    align-items: center;
+    box-shadow: 4px 4px 0px #000;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    text-align: left;
+    margin: 0 0 40px 20px;
+}
+
+/* Contenedor del Podio */
+.podium-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end; /* Alinea los elementos al fondo */
+    height: 60vh;
+    padding: 0 50px;
+}
+
+.trophy-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+}
+
+/* El trofeo de oro se empuja hacia arriba */
+.trophy-item.gold {
+    margin-bottom: 100px; 
+}
+
+.trophy-image img {
+    max-width: 100%;
+    height: auto;
+    /* Sombra suave para que resalten del fondo */
+    filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.15));
+    transition: transform 0.3s ease;
+}
+
+.trophy-image img:hover {
+    transform: scale(1.1) rotate(2deg);
+}
+
+.trophy-label {
+    margin-top: 20px;
+    font-size: 1.8rem;
+    color: #000;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .podium-container {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+    }
+    .trophy-item.gold {
+        margin-bottom: 20px;
+        order: -1; /* Poner el de oro arriba en móvil */
+    }
+}
+

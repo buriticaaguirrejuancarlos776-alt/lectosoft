@@ -1,0 +1,449 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft - Rompecabezas Enmarcado</title>
+
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/menu_juego.css' %}">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/rompecabeza.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #000 !important;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Luckiest Guy', cursive !important;
+        }
+
+        .contenedor {
+            width: 90vw;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            /* Ya no hay scroll, ni borramos el background */
+        }
+
+        .logo-text {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            z-index: 10;
+        }
+
+        .logo-text img {
+            height: 110px;
+            width: auto;
+        }
+
+        .btn-inicio-limpio {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            z-index: 10;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-inicio-limpio img {
+            width: 90px;
+            height: auto;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 0px; /* Reducido de 40px para subir todo el contenido */
+            padding-bottom: 50px;
+            font-family: 'Luckiest Guy', cursive !important;
+        }
+
+        .main-title {
+            font-size: 3.5rem !important;
+            color: #000 !important;
+            margin: 20px 0 20px 0 !important;
+            filter: drop-shadow(4px 4px 10px rgba(0, 0, 0, 0.1));
+            font-family: 'Luckiest Guy', cursive !important;
+        }
+
+        .puzzle-section {
+            width: 90%;
+            max-width: 950px;
+            margin: 50px auto 40px auto;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 40px 25px 25px 25px;
+            border-radius: 40px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            color: #000 !important;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-left: 20px;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+            font-family: 'Luckiest Guy', cursive !important;
+        }
+
+        .section-title span {
+            font-size: 2.5rem;
+        }
+
+        .carousel-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            position: relative;
+        }
+
+        .carousel-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 95%;
+            height: 350px;
+            background: transparent;
+            border-radius: 30px;
+            pointer-events: none;
+            z-index: 1;
+            display: none;
+        }
+
+        /* ESTILOS PAGINACIÓN INFANTIL */
+        .btn-page-infantil {
+            background: #ffeb3b;
+            border: 4px solid #f57f17;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            font-family: 'Luckiest Guy', cursive;
+            color: #d84315;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #f57f17, 0 10px 15px rgba(0,0,0,0.3);
+            transition: all 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+        .btn-page-infantil:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #f57f17, 0 8px 10px rgba(0,0,0,0.3);
+            background: #fff59d;
+        }
+        .btn-page-infantil:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #f57f17, 0 4px 5px rgba(0,0,0,0.3);
+        }
+        .btn-page-infantil.active {
+            background: #4facfe;
+            border-color: #0277bd;
+            color: white;
+            box-shadow: 0 6px 0 #0277bd, 0 10px 15px rgba(0,0,0,0.3);
+        }
+
+        .carousel-wrapper {
+            flex: 1;
+            overflow-x: hidden;
+            border-radius: 20px;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .puzzle-selection {
+            display: flex;
+            gap: 30px;
+            padding: 10px 20px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .puzzle-item {
+            width: 200px;
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .puzzle-card {
+            background: transparent !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .puzzle-card img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: 0.3s;
+        }
+
+        .puzzle-label {
+            margin-top: 15px;
+            font-size: 1.3rem;
+            color: #000 !important;
+            font-weight: normal;
+            font-family: 'Luckiest Guy', cursive !important;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            width: 100%;
+            display: block;
+        }
+
+        .puzzle-item:hover {
+            transform: scale(1.1) rotate(2deg);
+        }
+
+        .puzzle-item:hover .puzzle-card {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 50px rgba(255, 107, 107, 0.4), 0 0 30px rgba(77, 150, 255, 0.3);
+        }
+
+        .puzzle-item:hover .puzzle-card img {
+            transform: scale(1.1) brightness(1.1);
+            filter: brightness(1.1) contrast(1.15) drop-shadow(0 0 15px rgba(255, 215, 61, 0.5));
+        }
+
+        .puzzle-item:hover .puzzle-label {
+            color: #000;
+            text-shadow: none;
+        }
+
+        .no-puzzles {
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            margin: 0;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+        <div class="logo-text">
+            <img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Logo">
+        </div>
+
+        <a href="/menu/" class="btn-inicio-limpio">
+            <img src="{% static 'inicio_sesion/img/inicio_catalogo.png' %}" alt="Ir al Menú">
+        </a>
+
+        <main>
+            <h1 class="main-title">ROMPECABEZAS</h1>
+
+            <!-- SECCIÓN RETOS -->
+            <div class="carousel-container" style="flex-direction: column; width: 100%;">
+                <div class="carousel-wrapper" style="width: 100%;">
+                    <div class="puzzle-selection" id="track-reto">
+                        {% for p in puzzles_reto %}
+                        <div class="puzzle-item">
+                            <a href="{% url 'jugar_rompecabeza' p.id %}" style="text-decoration: none;">
+                                <div class="puzzle-card">
+                                    <img src="{{ p.imagen.url }}" alt="{{ p.titulo }}">
+                                </div>
+                                <p class="puzzle-label">{{ p.titulo|upper }}</p>
+                            </a>
+                        </div>
+                        {% empty %}
+                        <p class="puzzle-label">¡Lee más cuentos para ganar retos!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- CONTENEDOR DE PAGINACIÓN INFANTIL -->
+                <div id="pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px;">
+                </div>
+            </div>
+
+
+        </main>
+
+        <!-- BOTÓN FLOTANTE MANUAL DE USUARIO -->
+        <style>
+            .btn-flotante-manual {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                background-color: #ff9800;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 36px;
+                font-family: 'Luckiest Guy', sans-serif;
+                text-decoration: none;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                z-index: 9999;
+                border: 3px solid white;
+                transition: transform 0.2s, background-color 0.2s;
+            }
+            .btn-flotante-manual:hover {
+                transform: scale(1.1);
+                background-color: #f57c00;
+                color: white;
+            }
+        </style>
+        <a href="{% url 'manual_usuario' %}" class="btn-flotante-manual" title="Ver Manual de Usuario">
+            ?
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const track = document.getElementById('track-reto');
+            if (!track) return;
+
+            const todasLasTarjetas = Array.from(track.querySelectorAll('.puzzle-item'));
+            const paginationControls = document.getElementById('pagination-controls');
+            
+            let itemsPerPage = 3;
+            let currentPage = 1;
+
+            function renderPagination() {
+                paginationControls.innerHTML = '';
+                const totalPages = Math.ceil(todasLasTarjetas.length / itemsPerPage);
+
+                if (totalPages <= 1) return; // No mostrar paginación si hay 1 o menos páginas
+
+                // Botón Anterior
+                const btnPrev = document.createElement('button');
+                btnPrev.innerHTML = '⬅️';
+                btnPrev.className = 'btn-page-infantil';
+                btnPrev.onclick = () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        updateView();
+                    }
+                };
+                if (currentPage === 1) btnPrev.style.opacity = '0.5';
+                paginationControls.appendChild(btnPrev);
+
+                // Botones de Número
+                for (let i = 1; i <= totalPages; i++) {
+                    const btnNum = document.createElement('button');
+                    btnNum.innerHTML = i;
+                    btnNum.className = 'btn-page-infantil';
+                    if (i === currentPage) {
+                        btnNum.classList.add('active');
+                    }
+                    btnNum.onclick = () => {
+                        currentPage = i;
+                        updateView();
+                    };
+                    paginationControls.appendChild(btnNum);
+                }
+
+                // Botón Siguiente
+                const btnNext = document.createElement('button');
+                btnNext.innerHTML = '➡️';
+                btnNext.className = 'btn-page-infantil';
+                btnNext.onclick = () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        updateView();
+                    }
+                };
+                if (currentPage === totalPages) btnNext.style.opacity = '0.5';
+                paginationControls.appendChild(btnNext);
+            }
+
+            function updateView() {
+                // Ocultar todos
+                todasLasTarjetas.forEach(t => {
+                    t.style.setProperty('display', 'none', 'important');
+                });
+
+                // Mostrar solo los de la página actual
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                
+                const cardsToShow = todasLasTarjetas.slice(startIndex, endIndex);
+                cardsToShow.forEach(t => {
+                    t.style.setProperty('display', 'flex', 'important');
+                });
+
+                renderPagination();
+            }
+
+            // Iniciar
+            updateView();
+        });
+    </script>
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

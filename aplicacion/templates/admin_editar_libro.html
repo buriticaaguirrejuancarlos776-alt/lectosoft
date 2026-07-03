@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Lectosoft | Gestionar Libro Generado</title>
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/admi_rompecabeza.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="bg-decoration"></div>
+    <div class="wrapper">
+        <header class="navbar">
+            <div class="brand">GESTIÓN DE <span>{{ libro.titulo|upper }}</span></div>
+            <a href="{% url 'admin_lectura' %}" class="btn-back">← VOLVER</a>
+        </header>
+
+        {% if messages %}
+        <style>
+            .toast-error { border: 1px solid rgba(239, 68, 68, 0.5); }
+            .toast-success { border: 1px solid rgba(34, 197, 94, 0.5); }
+        </style>
+        <div id="toast-container" style="position: fixed; top: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 12px;">
+            {% for message in messages %}
+            <div class="toast-message {% if message.tags == 'error' %}toast-error{% else %}toast-success{% endif %}" style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); padding: 15px 25px; border-radius: 12px; font-weight: 600; color: white; display: flex; align-items: center; gap: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); transform: translateX(120%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;">
+                {% if message.tags == 'error' %}
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: rgba(239, 68, 68, 0.2); display: flex; align-items: center; justify-content: center; color: #f87171; font-size: 14px;">❌</div>
+                {% else %}
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: rgba(34, 197, 94, 0.2); display: flex; align-items: center; justify-content: center; color: #4ade80; font-size: 16px;">✔️</div>
+                {% endif %}
+                <span style="font-size: 14px; letter-spacing: 0.3px;">{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const toasts = document.querySelectorAll('.toast-message');
+                toasts.forEach((toast, index) => {
+                    setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 100 + (index * 150));
+                    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(120%)'; setTimeout(() => toast.remove(), 500); }, 3500 + (index * 500));
+                });
+            });
+        </script>
+        {% endif %}
+
+        <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 30px;">
+            <!-- Estado del Libro -->
+            <div class="formulario-seccion" style="flex: 1; min-width: 300px; max-width: 400px; border-color: #f0d06f;">
+                <h3 style="color: #f0d06f; text-align: center; margin-bottom: 20px;">Estado de Generación</h3>
+                <ul style="list-style: none; padding: 0; color: white; font-size: 18px; line-height: 2;">
+                    <li>✅ Portada inicial creada</li>
+                    <li>✅ {{ secciones|length }} Secciones de lectura</li>
+                    <li>✅ {{ ahorcados|length }} Ahorcados generados</li>
+                    <li>✅ Rompecabezas asociado</li>
+                    <li>✅ Moraleja lista</li>
+                </ul>
+            </div>
+
+            <!-- Opciones de Edición -->
+            <div class="formulario-seccion" style="flex: 1; min-width: 300px; max-width: 500px;">
+                <h3 style="color: #4facfe; text-align: center; margin-bottom: 20px;">Editar Contenidos</h3>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <a href="{% url 'admin_editar_secciones' libro.id %}" class="btn-accion" style="text-align: center; text-decoration: none; display: block;">📝 Editar Texto del Cuento</a>
+                    <a href="{% url 'admin_editar_ahorcados' libro.id %}" class="btn-accion" style="text-align: center; text-decoration: none; display: block; background: linear-gradient(135deg, #e1b12c, #fbc531);">🎯 Editar Preguntas de Ahorcado</a>
+                    
+                    <form action="{% url 'admin_editar_libro_generado' libro.id %}" method="POST" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                        {% csrf_token %}
+                        <label style="color: #ccc; font-weight: bold;">Moraleja Final:</label>
+                        <textarea name="moraleja" rows="4" style="width: 100%; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; padding: 10px; color: white; font-family: 'Montserrat', sans-serif;">{{ libro.moraleja }}</textarea>
+                        <button type="submit" class="btn-accion" style="background: linear-gradient(135deg, #44bd32, #4cd137);">💾 Guardar Moraleja</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

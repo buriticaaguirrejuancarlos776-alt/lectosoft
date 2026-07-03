@@ -1,0 +1,370 @@
+/* --- ESTILOS DE ENLACES Y BOTONES --- */
+
+/* Esto quita la línea debajo de los botones y pone la letra negra */
+.menu a {
+    text-decoration: none !important; /* Quita el subrayado */
+    color: black !important;          /* Letras negras */
+}
+
+/* Esto asegura que se mantengan así aunque ya los hayas visitado */
+.menu a:visited {
+    color: black !important;
+}
+
+/* Para que el texto y la imagen del botón estén bien alineaditos */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio entre el icono y el texto */
+    min-width: 200px;
+    border-radius: 50px;
+    border: 3px solid black;
+    padding: 15px 30px;  
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.btn img {
+    width: 45px;
+    height: 45px;
+    margin-right: 10px;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+.btn:active {
+    transform: scale(0.95);
+    box-shadow: inset 0 5px 10px rgba(0,0,0,0.3);
+}
+
+/* --- VARIABLES Y RESET --- */
+
+:root {
+    --bg-gray: #DADCE0;
+    --bg-green: #C8E3A4;
+    --bg-yellow: #FFF59D;
+    --bg-pink: #F8BBD0;
+    --card-green: rgba(84, 130, 84, 0.3);
+    --font-main: 'Fredoka', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-main);
+}
+
+h1 {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 40px;
+}
+
+body {
+    background: black;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- CONTENEDORES --- */
+
+.contenedor {
+    width: 90vw;
+    height: 85vh;
+    background: linear-gradient(rgba(247, 247, 247, 0.6), rgba(247, 247, 247, 0.8)),
+                url("../img/iniciopagina.png") no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+    margin: 0 auto;
+    position: relative;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 10;
+}
+
+/* --- COLORES DE BOTONES --- */
+
+.gray { background: var(--bg-gray); }
+.green { background: var(--bg-green); }
+.yellow { background: var(--bg-yellow); }
+.pink { background: var(--bg-pink); }
+
+/* --- SECCIÓN DE MENSAJE Y MUÑECO --- */
+
+.mensaje {
+    width: 650px;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    transform: translateY(-80px);
+    position: relative;
+}
+
+.muneco {
+    position: absolute;
+    left: -120px;
+    top: 40%;
+    width: 300px;
+    z-index: 2;
+    /* Se eliminó la animación girar3d para que el muñeco esté estático */
+    transform: translateY(-52%) perspective(800px);
+}
+
+.card {
+    background: var(--card-green);
+    padding: 40px 60px;
+    border-radius: 50px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+    margin-top: 60px;
+}
+
+.card h1 {
+    font-size: 30px;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+/* --- SECCIÓN DE ANIMALES --- */
+
+.animales {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: -15px;           
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 5;
+}
+
+.animales img {
+    width: 900px; 
+    height: 250px;
+    margin-top: 0px;
+}
+
+/* --- DISEÑO LATERAL DE PUNTUACIÓN --- */
+.lateral-score {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+    border: 4px solid white;
+    border-radius: 20px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    transition: transform 0.3s ease;
+    cursor: default;
+}
+
+.lateral-score:hover {
+    transform: scale(1.05);
+}
+
+.score-icon-container {
+    animation: flotar-score 3s ease-in-out infinite;
+    margin-bottom: 5px;
+}
+
+.score-star {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.score-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+}
+
+.score-label {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.score-number {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 38px;
+    color: #FFF59D;
+    line-height: 1;
+}
+
+@keyframes flotar-score {
+    0% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-8px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(-5deg); }
+}
+
+/* --- DISEÑO LATERAL DE TROFEOS (REPISA) --- */
+.lateral-shelf {
+    position: fixed;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    border: 4px solid white;
+    border-radius: 40px 0 0 40px;
+    padding: 20px 40px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: default;
+}
+
+.lateral-shelf:hover {
+    transform: translateY(-50%) translateX(-15px);
+}
+
+.shelf-title {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 20px;
+    color: white;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.shelf-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.shelf-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.trophy-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.shelf-slot.unlocked .trophy-img {
+    filter: drop-shadow(0 5px 5px rgba(255, 215, 0, 0.8));
+    animation: brillo-trofeo 3s infinite alternate;
+}
+
+.shelf-slot.locked .trophy-img {
+    filter: grayscale(100%) brightness(40%) contrast(1.2);
+    opacity: 0.7;
+}
+
+.shelf-slot:hover .trophy-img {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.shelf-board {
+    width: 75px;
+    height: 14px;
+    background: linear-gradient(to bottom, #8B4513, #5C2D0C);
+    border-radius: 6px;
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.2), 0 4px 6px rgba(0,0,0,0.6);
+    position: relative;
+    top: -8px;
+    z-index: 1;
+}
+
+.trophy-points {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 14px;
+    color: #FFF59D;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    margin-top: -4px;
+    letter-spacing: 1px;
+}
+
+@keyframes brillo-trofeo {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-4px); }
+}
+
+/* --- RESPONSIVE DESIGN --- */
+
+@media (max-width: 1200px) {
+    .contenedor { max-width: 95%; padding: 20px; }
+    .animales img { width: 800px; height: auto; }
+}
+
+@media (max-width: 1024px) {
+    .menu { flex-wrap: wrap; }
+    .btn { min-width: 150px; padding: 10px 20px; font-size: 16px; }
+    .mensaje { width: 80%; }
+    .muneco { width: 200px; left: -80px; }
+    .card h1 { font-size: 24px; }
+    .animales img { width: 100%; max-width: 700px; margin-top: 0px; }
+}
+
+@media (max-width: 768px) {
+    .lateral-score { top: 5%; left: 0; transform: none; border-radius: 0 20px 20px 0; padding: 10px; }
+    .lateral-score:hover { transform: none; }
+    .score-star { width: 40px; height: 40px; }
+    .score-number { font-size: 24px; }
+    .lateral-shelf { top: 5%; right: 0; transform: none; border-radius: 20px 0 0 20px; padding: 10px; }
+    .lateral-shelf:hover { transform: none; }
+    .trophy-img { width: 40px; height: 40px; }
+    .shelf-title { font-size: 14px; margin-bottom: 5px; }
+    .muneco { position: relative; left: 0; top: 0; transform: none; width: 150px; margin: 0 auto -20px auto; display: block; }
+    .mensaje { transform: none; width: 90%; margin-top: 40px; }
+    .card { padding: 20px; margin-top: 20px; }
+    .animales img { max-width: 90%; margin-top: 0px; }
+    .contenedor { min-height: auto; padding-bottom: 50px; }
+}
+
+@media (max-width: 480px) {
+    .menu { flex-direction: column; align-items: center; gap: 10px; }
+    .btn { width: 80%; }
+    .card h1 { font-size: 18px; }
+    .animales { position: relative; margin-top: 30px; bottom: 0; }
+    .animales img { margin-top: 0; }
+    .lateral-score { padding: 5px; }
+    .score-star { width: 30px; height: 30px; }
+    .score-number { font-size: 18px; }
+    .lateral-shelf { padding: 5px; }
+    .trophy-img { width: 30px; height: 30px; }
+    .shelf-title { display: none; }
+}
+

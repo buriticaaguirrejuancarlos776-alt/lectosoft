@@ -1,0 +1,423 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft | Gestión de Cuentos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/admin_theme.css' %}">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+        body { background-color: #0b1120; color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
+        
+        .sidebar { 
+            width: 260px; 
+            background: #0f172a; 
+            border-right: 1px solid rgba(255,255,255,0.05); 
+            padding: 25px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            position: fixed; 
+            left: 0; 
+            top: 0; 
+            z-index: 50;
+        }
+        
+        .main-content { 
+            margin-left: 260px; 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            position: relative;
+        }
+
+        .ambient-light {
+            position: absolute; 
+            top: 30%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 800px; 
+            height: 500px; 
+            background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, transparent 70%); 
+            filter: blur(50px); 
+            z-index: -1; 
+            pointer-events: none;
+        }
+
+        .topbar { 
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center; 
+            padding: 20px 40px; 
+        }
+        
+        .sidebar-link { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 12px 15px; 
+            border-radius: 12px; 
+            color: #94a3b8; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 14px; 
+            transition: all 0.3s; 
+            margin-bottom: 5px; 
+        }
+        .sidebar-link:hover { background: rgba(255,255,255,0.05); color: white; }
+        .sidebar-link.active { background: rgba(30, 58, 138, 0.4); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; }
+
+        .book-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.1); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
+
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR GLOBAL -->
+    <aside class="sidebar">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 50px;">
+            <div style="width: 38px; height: 38px; display: flex; justify-content: center; align-items: center;">
+                <img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            </div>
+            <div style="line-height: 1.1;">
+                <span style="font-weight: 900; color: white; font-size: 16px; letter-spacing: 1px;">LECTOSOFT</span><br>
+                <span style="font-weight: 800; color: #38bdf8; font-size: 12px; letter-spacing: 2px;">ADMIN</span>
+            </div>
+        </div>
+
+        <div style="font-size: 11px; color: #475569; font-weight: 800; letter-spacing: 1.5px; margin-bottom: 15px; padding-left: 5px;">ADMINISTRACIÓN</div>
+        
+        <nav style="display: flex; flex-direction: column;">
+            <a href="/administrador/" class="sidebar-link"><span>📱</span> Panel de Control</a>
+            <a href="/admin_lectura/" class="sidebar-link active"><span>📖</span> Cuentos</a>
+            <a href="/admi_rompecabeza/" class="sidebar-link"><span>🧩</span> Rompecabezas</a>
+            <a href="/jugadores/" class="sidebar-link"><span>👥</span> Jugadores</a>
+            <a href="/reportes/" class="sidebar-link"><span>📊</span> Reportes</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="ambient-light"></div>
+        
+        <header class="topbar">
+            <!-- Acciones Top Right -->
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div id="theme-toggle-btn" class="theme-toggle-container" style="background: rgba(30, 41, 59, 0.6); padding: 4px; border-radius: 20px; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;">
+                    <div id="theme-sun" style="padding: 6px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.3s; opacity: 0.5;">
+                        <span style="font-size: 12px;">☀️</span>
+                    </div>
+                    <div id="theme-moon" style="background: #1e293b; padding: 6px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.3s;">
+                        <span style="font-size: 12px;">🌙</span>
+                    </div>
+                </div>
+                
+                <a href="{% url 'logout_admin' %}" style="display: flex; align-items: center; gap: 8px; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.3s;" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='transparent'">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/><path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/></svg>
+                    Salir
+                </a>
+            </div>
+        </header>
+
+        {% if messages %}
+        <style>
+            .toast-error { border: 1px solid rgba(239, 68, 68, 0.5); }
+            .toast-success { border: 1px solid rgba(34, 197, 94, 0.5); }
+        </style>
+        <div id="toast-container" style="position: fixed; top: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 12px;">
+            {% for message in messages %}
+            <div class="toast-message {% if message.tags == 'error' %}toast-error{% else %}toast-success{% endif %}" style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); padding: 15px 25px; border-radius: 12px; font-weight: 600; color: white; display: flex; align-items: center; gap: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.4); transform: translateX(120%); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;">
+                {% if message.tags == 'error' %}
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: rgba(239, 68, 68, 0.2); display: flex; align-items: center; justify-content: center; color: #f87171; font-size: 14px;">❌</div>
+                {% else %}
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: rgba(34, 197, 94, 0.2); display: flex; align-items: center; justify-content: center; color: #4ade80; font-size: 16px;">✔️</div>
+                {% endif %}
+                <span style="font-size: 14px; letter-spacing: 0.3px;">{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const toasts = document.querySelectorAll('.toast-message');
+                toasts.forEach((toast, index) => {
+                    setTimeout(() => { toast.style.transform = 'translateX(0)'; }, 100 + (index * 150));
+                    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(120%)'; setTimeout(() => toast.remove(), 500); }, 3500 + (index * 500));
+                });
+            });
+        </script>
+        {% endif %}
+
+        <div style="padding: 0 40px 40px 40px; max-width: 1400px; width: 100%;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+                <div>
+                    <h1 style="color: white; font-size: 2.2rem; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px;">Biblioteca de <span style="color: #3b82f6;">Cuentos</span></h1>
+                    <p style="color: #94a3b8; font-size: 14.5px;">Administra todos los cuentos de la plataforma.</p>
+                </div>
+                <div>
+                    <button type="button" id="btn-abrir-modal-generar" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);" onmouseover="this.style.background='#2563eb'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#3b82f6'; this.style.transform='none';">
+                        <span style="font-size: 16px;">+</span> AGREGAR CUENTO
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 30px;">
+                <div style="position: relative; flex: 1; max-width: 500px;">
+                            <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #64748b;">🔍</span>
+                            <input type="text" id="buscador-libros" placeholder="Buscar cuentos..." style="width: 100%; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 15px 14px 45px; color: white; font-family: 'Montserrat', sans-serif; outline: none; transition: 0.3s;" onfocus="this.style.borderColor='#3b82f6'; this.style.background='rgba(30, 41, 59, 0.8)';" onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.background='rgba(30, 41, 59, 0.5)';">
+                        </div>
+                    </div>
+
+                    <!-- CUENTOS CLÁSICOS -->
+                    <div id="lista-libros">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px;">
+                            {% for libro in libros_clasicos %}
+                            <div class="book-card card-admin" style="background: #1e293b; border-radius: 16px; padding: 25px; display: flex; align-items: center; gap: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; height: 100%; min-height: 220px;">
+                                <div style="width: 120px; height: 175px; border-radius: 10px; overflow: hidden; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                                    <img src="{{ libro.imagen.url }}" alt="{{ libro.titulo }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div style="display: flex; flex-direction: column; flex: 1; justify-content: center;">
+                                    <h3 class="titulo-libro" style="color: white; font-size: 1.3rem; font-weight: 800; margin: 0 0 10px 0; line-height: 1.3;">{{ libro.titulo }}</h3>
+                                    <span style="background: rgba(34, 197, 94, 0.15); color: #4ade80; font-size: 11px; padding: 5px 10px; border-radius: 20px; font-weight: 700; align-self: flex-start; margin-bottom: 10px; border: 1px solid rgba(34, 197, 94, 0.3);">CLÁSICO</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- LIBROS GENERADOS -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 50px;">
+                            {% for libro in libros_generados %}
+                            <div class="book-card card-admin" style="background: #1e293b; border-radius: 16px; padding: 25px; display: flex; align-items: center; gap: 20px; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s; height: 100%; min-height: 220px;">
+                                <div style="width: 130px; height: 190px; border-radius: 10px; overflow: hidden; flex-shrink: 0; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                                    <img src="{% if libro.imagen %}{{ libro.imagen.url }}{% else %}https://via.placeholder.com/130x190?text=Sin+Portada{% endif %}" alt="{{ libro.titulo }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div style="display: flex; flex-direction: column; flex: 1; justify-content: center; height: 100%;">
+                                    <h3 class="titulo-libro" style="color: white; font-size: 1.4rem; font-weight: 800; margin: 0 0 10px 0; line-height: 1.2;">{{ libro.titulo }}</h3>
+                                    <span style="background: transparent; color: #c084fc; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 700; align-self: flex-start; margin-bottom: auto; border: 1px solid rgba(168, 85, 247, 0.4);">GENERADO</span>
+                                    
+                                    <div style="display: flex; gap: 8px; margin-top: 20px;">
+                                        <a href="{% url 'admin_editar_libro_generado' libro.id %}" style="flex: 1; text-align: center; background: transparent; color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 10px 5px; border-radius: 8px; font-size: 11px; font-weight: 700; text-decoration: none; transition: 0.3s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">GESTIONAR</a>
+                                        <form action="{% url 'eliminar_libro' libro.id %}" method="POST" style="flex: 1;" onsubmit="confirmarEliminacion(event, this);">
+                                            {% csrf_token %}
+                                            <button type="submit" style="width: 100%; background: transparent; color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 10px 5px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='transparent'">ELIMINAR</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <p style="grid-column: 1/-1; color: #64748b; font-weight: 500;">No hay libros generados desde PDF aún.</p>
+                            {% endfor %}
+                        </div>
+
+                        <!-- PAGINADOR -->
+                        {% if libros_generados.has_other_pages %}
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 10px; margin-bottom: 30px;">
+                            
+                            {% if libros_generados.has_previous %}
+                            <a href="?page={{ libros_generados.previous_page_number }}" style="text-decoration: none; display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: transparent; color: #94a3b8; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#94a3b8'">«</a>
+                            {% else %}
+                            <span style="display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: transparent; color: #64748b; cursor: not-allowed;">«</span>
+                            {% endif %}
+
+                            {% for num in libros_generados.paginator.page_range %}
+                                {% if libros_generados.number == num %}
+                                <span style="display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; border-radius: 8px; border: none; background: rgba(59, 130, 246, 0.4); border: 1px solid rgba(59, 130, 246, 0.6); color: #60a5fa; font-weight: bold;">{{ num }}</span>
+                                {% elif num > libros_generados.number|add:'-3' and num < libros_generados.number|add:'3' %}
+                                <a href="?page={{ num }}" style="text-decoration: none; display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: transparent; color: #94a3b8; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#94a3b8'">{{ num }}</a>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if libros_generados.has_next %}
+                            <a href="?page={{ libros_generados.next_page_number }}" style="text-decoration: none; display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: transparent; color: #94a3b8; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#94a3b8'">»</a>
+                            {% else %}
+                            <span style="display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: transparent; color: #64748b; cursor: not-allowed;">»</span>
+                            {% endif %}
+
+                        </div>
+                        {% endif %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </main>
+
+    <!-- MODAL PARA GENERAR LIBRO DESDE PDF -->
+    <div id="modal-generar-libro" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(8px);">
+        <div style="max-width: 500px; width: 90%; background: #1e293b; position: relative; padding: 40px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(56, 189, 248, 0.3);">
+            <button type="button" id="btn-cerrar-modal-generar" style="position: absolute; top: 20px; right: 25px; background: none; border: none; color: #94a3b8; font-size: 28px; cursor: pointer; transition: 0.3s; padding: 0; line-height: 1;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#94a3b8'">&times;</button>
+            
+            <div style="text-align: center; margin-bottom: 30px;">
+                <span style="font-size: 40px; margin-bottom: 10px; display: block;">📄</span>
+                <h2 style="color: white; font-size: 1.5rem; font-weight: 800; margin: 0;">Generar Libro Interactivo</h2>
+                <p style="color: #94a3b8; font-size: 13px; margin-top: 5px;">Sube un PDF para convertirlo en cuento.</p>
+            </div>
+
+            <form action="{% url 'admin_lectura' %}" method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 20px;">
+                {% csrf_token %}
+                <input type="hidden" name="accion" value="generar_pdf">
+                
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: #cbd5e1; font-weight: 600; font-size: 13px;">Título del Libro</label>
+                    <input type="text" name="titulo" required placeholder="Ej. El Mago de Oz" style="width: 100%; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 15px; color: white; outline: none; transition: 0.3s;" onfocus="this.style.borderColor='#3b82f6'">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: #cbd5e1; font-weight: 600; font-size: 13px;">Archivo PDF</label>
+                    <input type="file" name="archivo_pdf" accept="application/pdf" required style="width: 100%; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; color: white; cursor: pointer; transition: 0.3s; font-size: 13px;" onfocus="this.style.borderColor='#3b82f6'">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="color: #cbd5e1; font-weight: 600; font-size: 13px;">Imagen de Portada (Opcional)</label>
+                    <input type="file" name="imagen_portada" accept="image/*" style="width: 100%; background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; color: white; cursor: pointer; transition: 0.3s; font-size: 13px;" onfocus="this.style.borderColor='#3b82f6'">
+                </div>
+
+                <button type="submit" style="background: #3b82f6; color: white; font-size: 14px; padding: 14px; margin-top: 10px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">
+                     GENERAR AHORA
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Modal Confirmación Eliminación -->
+    <div id="custom-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: #1e293b; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 20px; padding: 30px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div style="width: 60px; height: 60px; background: rgba(239, 68, 68, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px auto;">
+                <span style="font-size: 30px; color: #ef4444;">⚠️</span>
+            </div>
+            <h3 style="color: white; margin-bottom: 10px; font-size: 1.4rem; font-weight: 800;">Confirmar Eliminación</h3>
+            <p style="color: #94a3b8; margin-bottom: 25px; font-size: 14px;">¿Estás seguro de que deseas eliminar este libro? Esta acción no se puede deshacer.</p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button type="button" id="modal-cancel-btn" style="padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-weight: 600; font-size: 13px; cursor: pointer; flex: 1; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">Cancelar</button>
+                <button type="button" id="modal-confirm-btn" style="padding: 12px 20px; border-radius: 10px; border: none; background: #ef4444; color: white; font-weight: 600; font-size: 13px; cursor: pointer; flex: 1; box-shadow: 0 4px 15px rgba(239,68,68,0.3); transition: 0.3s;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script General -->
+    <script>
+        // Lógica del modal de generar
+        const btnAbrirModal = document.getElementById('btn-abrir-modal-generar');
+        const btnCerrarModal = document.getElementById('btn-cerrar-modal-generar');
+        const modalGenerar = document.getElementById('modal-generar-libro');
+
+        if (btnAbrirModal) btnAbrirModal.addEventListener('click', () => modalGenerar.style.display = 'flex');
+        if (btnCerrarModal) btnCerrarModal.addEventListener('click', () => modalGenerar.style.display = 'none');
+        if (modalGenerar) {
+            modalGenerar.addEventListener('click', (e) => {
+                if (e.target === modalGenerar) modalGenerar.style.display = 'none';
+            });
+        }
+
+        // Lógica del modal de confirmación de eliminación
+        let formToSubmit = null;
+        function confirmarEliminacion(event, form) {
+            event.preventDefault();
+            formToSubmit = form;
+            document.getElementById('custom-modal').style.display = 'flex';
+        }
+
+        function seleccionarLibro(id, titulo, imagen, url_gestionar) {
+            const panel = document.getElementById('panel-detalles');
+            
+            const actionsHtml = `
+            <div style="background: #1e293b; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden; margin-bottom: 20px;">
+                <div style="padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 800; color: white;">Acciones rápidas</div>
+                <div style="padding: 10px;">
+                    <a href="${url_gestionar}" style="display: flex; align-items: center; gap: 10px; padding: 12px 15px; color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 600; border-radius: 8px; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.color='white'" onmouseout="this.style.background='transparent'; this.style.color='#94a3b8'">
+                        <span>✏️</span> Editar cuento (Gestionar)
+                    </a>
+                    <button onclick="confirmarEliminacionPanel('${id}')" style="width: 100%; display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: transparent; border: none; color: #ef4444; font-size: 13px; font-weight: 600; border-radius: 8px; transition: 0.3s; cursor: pointer; text-align: left;" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='transparent'">
+                        <span>🗑️</span> Eliminar cuento
+                    </button>
+                    <form id="form-eliminar-panel-${id}" action="/admin_lectura/eliminar/${id}/" method="POST" style="display:none;">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${document.querySelector('[name=csrfmiddlewaretoken]').value}">
+                    </form>
+                </div>
+            </div>
+            `;
+
+            panel.innerHTML = `
+                <div style="position: sticky; top: 30px;">
+                    <!-- Info Cuento -->
+                    <div style="background: #1e293b; border-radius: 16px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+                        <h3 style="color: white; font-size: 1rem; font-weight: 800; margin: 0 0 20px 0;">Información del cuento</h3>
+                        <div style="display: flex; gap: 15px;">
+                            <div style="width: 100px; height: 140px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0;">
+                                <img src="${imagen}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <h4 style="color: white; font-size: 1.1rem; font-weight: 800; margin: 0 0 10px 0; line-height: 1.2;">${titulo}</h4>
+                                <span style="background: rgba(168, 85, 247, 0.15); color: #c084fc; font-size: 10px; padding: 4px 8px; border-radius: 20px; font-weight: 700; align-self: flex-start; border: 1px solid rgba(168, 85, 247, 0.3); margin-bottom: 10px;">GENERADO</span>
+                                <p style="color: #94a3b8; font-size: 11px; font-weight: 600;">LectoSoft</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    ${actionsHtml}
+                </div>
+            `;
+        }
+
+        function confirmarEliminacionPanel(id) {
+            const form = document.getElementById('form-eliminar-panel-' + id);
+            confirmarEliminacion({preventDefault: () => {}}, form);
+        }
+        document.getElementById('modal-cancel-btn').addEventListener('click', () => {
+            document.getElementById('custom-modal').style.display = 'none';
+            formToSubmit = null;
+        });
+        document.getElementById('modal-confirm-btn').addEventListener('click', () => {
+            if (formToSubmit) formToSubmit.submit();
+        });
+
+        // Buscador de libros
+        const buscador = document.getElementById('buscador-libros');
+        if (buscador) {
+            buscador.addEventListener('input', function() {
+                const filtro = this.value.toLowerCase();
+                const tarjetas = document.querySelectorAll('.card-admin');
+                
+                tarjetas.forEach(tarjeta => {
+                    const tituloElem = tarjeta.querySelector('.titulo-libro');
+                    if (tituloElem) {
+                        const titulo = tituloElem.textContent.toLowerCase();
+                        tarjeta.style.display = titulo.includes(filtro) ? 'flex' : 'none';
+                    }
+                });
+            });
+        }
+
+        // Auto escalado
+        function aplicarEscalaResponsiva() {
+            const minWidth = 1200; 
+            const screenWidth = window.innerWidth;
+            
+            if (screenWidth < minWidth) {
+                const scale = screenWidth / minWidth;
+                document.body.style.transform = `scale(${scale})`;
+                document.body.style.transformOrigin = 'top left';
+                document.body.style.width = `${minWidth}px`;
+                document.body.style.minHeight = `${window.innerHeight / scale}px`;
+                document.documentElement.style.overflowX = 'hidden';
+                document.body.style.overflowX = 'hidden';
+            } else {
+                document.body.style.transform = 'none';
+                document.body.style.width = '100%';
+                document.body.style.minHeight = '100vh';
+            }
+        }
+        window.addEventListener('resize', aplicarEscalaResponsiva);
+        window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+        aplicarEscalaResponsiva();
+    </script>
+    <script src="{% static 'inicio_sesion/js/admin_theme.js' %}"></script>
+</body>
+</html>

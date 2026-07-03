@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft - Inicio de Sesión</title>
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/inicio_sesion.css' %}">
+    <style>
+        .avatar-preview-container { margin-bottom: 15px; display: flex; justify-content: center; }
+        #avatar-preview {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 4px solid #000; background: #fff;
+        }
+        .messages-container {
+            margin-bottom: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-weight: 500;
+            animation: slideIn 0.3s ease-in-out;
+        }
+        .message.error {
+            background-color: #fee;
+            color: #c33;
+            border-left: 4px solid #c33;
+        }
+        .message.success {
+            background-color: #efe;
+            color: #000;
+            border-left: 4px solid #3c3;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .input-error {
+            border: 2px solid #c33 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="marco-exterior">
+        <div class="background-container">
+            <!-- BOTÓN FLOTANTE MANUAL DE USUARIO -->
+            <style>
+                .btn-flotante-manual {
+                    position: absolute;
+                    bottom: 20px;
+                    right: 20px;
+                    width: 60px;
+                    height: 60px;
+                    background-color: #ff9800;
+                    color: white;
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 36px;
+                    font-family: 'Luckiest Guy', sans-serif;
+                    text-decoration: none;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                    z-index: 9999;
+                    border: 3px solid white;
+                    transition: transform 0.2s, background-color 0.2s;
+                }
+                .btn-flotante-manual:hover {
+                    transform: scale(1.1);
+                    background-color: #f57c00;
+                    color: white;
+                }
+            </style>
+            <a href="{% url 'manual_usuario' %}" class="btn-flotante-manual" title="Ver Manual de Usuario">
+                ?
+            </a>
+
+            <h1 class="brand-logo"><img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Logo"></h1>
+            <main class="login-card {% if step == 'code' %}admin-mode{% endif %}" id="login-card">
+                {% if step %}
+                    <a href="{% url 'login' %}" class="close-btn-new" style="text-decoration: none;">
+                        <span class="cross">✕</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'principal' %}" class="close-btn-new" style="text-decoration: none;">
+                        <span class="cross">✕</span>
+                    </a>
+                {% endif %}
+                
+                {% if messages %}
+                <div class="messages-container" id="login-messages">
+                    {% for message in messages %}
+                        <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <script>
+                    setTimeout(function() {
+                        var msgContainer = document.getElementById('login-messages');
+                        if (msgContainer) {
+                            msgContainer.style.transition = "opacity 0.5s ease";
+                            msgContainer.style.opacity = "0";
+                            setTimeout(function() { msgContainer.remove(); }, 500);
+                        }
+                    }, 2000);
+                </script>
+                {% endif %}
+                
+                <div class="avatar-preview-container {% if step == 'show_code' %}hide-in-code{% endif %}">
+                    <div class="avatar-wrapper">
+                        <img id="avatar-preview" src="https://api.dicebear.com/6.x/bottts/svg?seed=Lecto" alt="Avatar">
+                    </div>
+                </div>
+                
+                <div class="title-wrapper {% if step == 'show_code' %}hide-in-code{% endif %}">
+                    <div class="main-title">
+                        <span class="leaf-left"></span>
+                        <h2>{% if step == 'code' %}ADMINISTRADOR{% else %}¡BIENVENIDO!{% endif %}</h2>
+                        <span class="leaf-right"></span>
+                    </div>
+                </div>
+                
+                {% if step == 'show_code' %}
+                    <style>
+                        .hide-in-code { display: none !important; }
+                    </style>
+                    <p style="text-align: center; color: #000; font-size: 18px; font-weight: 800; margin-bottom: 10px; margin-top: -25px; text-transform: uppercase;">
+                        Recuerda el código
+                    </p>
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <span style="font-size: 65px; font-weight: 900; color: #F683D1; letter-spacing: 20px; margin-left: 20px; font-family: 'Luckiest Guy', cursive, sans-serif; -webkit-text-stroke: 2px white; text-shadow: 0px 6px 0px #D85AA8;">{{ player_code }}</span>
+                    </div>
+                    <div class="button-container" style="margin-bottom: 30px;">
+                        <a href="{% url 'menu_juego' %}" class="btn-jugar-new" style="text-decoration: none;">
+                            <div class="paw-circle"><img src="{% static 'inicio_sesion/img/huella_perfil.png' %}" alt="huella"></div>
+                            <span>JUGAR</span>
+                        </a>
+                    </div>
+                {% else %}
+                <form method="POST" id="loginForm">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        {% if step == 'code' %}
+                            <input type="text" name="admin_code" id="login-code" placeholder="código de seguridad" required maxlength="6">
+                            <span class="icon right-icon"><img src="{% static 'inicio_sesion/img/candado_cerrado.png' %}" alt="seguridad"></span>
+                        {% elif step == 'player_code' %}
+                            <input type="hidden" name="username" value="{{ username }}">
+                            <input type="text" name="player_code" id="login-code" placeholder="Tu código de 4 dígitos" required maxlength="4">
+                            <span class="icon right-icon"><img src="{% static 'inicio_sesion/img/candado_cerrado.png' %}" alt="código"></span>
+                        {% else %}
+                            <input type="text" name="username" id="login-username" placeholder="nombre del jugador" required maxlength="100">
+                            <span class="icon right-icon"><img src="{% static 'inicio_sesion/img/user.png' %}" alt="usuario"></span>
+                        {% endif %}
+                    </div>
+                    <div class="button-container">
+                        {% if step == 'code' or step == 'player_code' %}
+                            <button type="submit" class="btn-jugar-new" id="admin-btn">
+                                <span>INGRESAR</span>
+                            </button>
+                        {% else %}
+                            <button type="submit" class="btn-jugar-new" id="player-btn">
+                                <div class="paw-circle"><img src="{% static 'inicio_sesion/img/huella_perfil.png' %}" alt="huella"></div>
+                                <span>JUGAR</span>
+                            </button>
+                            <button type="submit" class="btn-jugar-new" id="admin-btn" style="display: none;">
+                                <span>INGRESAR</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="login-options">
+                        {% if step == 'code' or step == 'player_code' %}
+                            <a href="{% url 'login' %}" class="back-link">
+                                <span class="badge-icon back-arrow"></span> Volver al inicio
+                            </a>
+                        {% else %}
+                            <p class="admin-link" id="admin-link">
+                                <span class="badge-icon"></span> Administrador
+                            </p>
+                            <p class="back-link" id="back-link" style="display: none;">
+                                <span class="badge-icon back-arrow"></span> Volver al inicio
+                            </p>
+                        {% endif %}
+                    </div>
+                </form>
+                {% endif %}
+            </main>
+        </div>
+    </div>
+
+
+
+    <script>
+        const URL_LOGIN = "{% url 'login' %}";
+        const URL_INICIO = "{% url 'principal' %}";
+    </script>
+    <script src="{% static 'inicio_sesion/js/inicio_sesion.js' %}"></script><!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

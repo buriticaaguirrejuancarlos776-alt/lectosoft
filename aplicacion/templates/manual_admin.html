@@ -1,0 +1,393 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft | Manual de Administrador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/admin_theme.css' %}">
+    
+    <!-- Librería para convertir a PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+        body { background-color: #0b1120; color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
+        
+        .sidebar { 
+            width: 260px; 
+            background: #0f172a; 
+            border-right: 1px solid rgba(255,255,255,0.05); 
+            padding: 25px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            position: fixed; 
+            left: 0; 
+            top: 0; 
+            z-index: 50;
+        }
+        
+        .main-content { 
+            margin-left: 260px; 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh; 
+            position: relative;
+        }
+
+        .ambient-light {
+            position: absolute; 
+            top: 30%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 800px; 
+            height: 500px; 
+            background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, transparent 70%); 
+            filter: blur(50px); 
+            z-index: -1; 
+            pointer-events: none;
+        }
+
+        .topbar { 
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center; 
+            padding: 20px 40px; 
+        }
+        
+        .sidebar-link { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            padding: 12px 15px; 
+            border-radius: 12px; 
+            color: #94a3b8; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 14px; 
+            transition: all 0.3s; 
+            margin-bottom: 5px; 
+        }
+        .sidebar-link:hover { background: rgba(255,255,255,0.05); color: white; }
+        .sidebar-link.active { background: rgba(30, 58, 138, 0.4); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; }
+
+        /* Estilos del manual (Adaptados al tema oscuro) */
+        .manual-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .module-card { 
+            background: #1e293b; 
+            border-radius: 20px; 
+            padding: 30px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            position: relative; 
+            border: 1px solid rgba(255,255,255,0.03); 
+            text-align: center; 
+            transition: 0.3s; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); 
+            cursor: pointer;
+        }
+        .module-card:hover { 
+            transform: translateY(-5px); 
+            border-color: rgba(59, 130, 246, 0.4); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3); 
+        }
+        
+        .card-glow { position: absolute; top: 0; left: 20%; right: 20%; height: 2px; background: #3b82f6; box-shadow: 0 0 15px #3b82f6; }
+
+        .btn-descargar {
+            background: rgba(59, 130, 246, 0.2); 
+            color: #60a5fa; 
+            border: 1px solid rgba(59, 130, 246, 0.4); 
+            padding: 12px 25px; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            width: 100%;
+        }
+        .btn-descargar:hover {
+            background: rgba(59, 130, 246, 0.4);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .panel-derecho {
+            width: 280px;
+            background: #1e293b;
+            padding: 30px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* Modal / Tablero Oscuro */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(8px); justify-content: center; align-items: center; }
+        .modal-content { background-color: #1e293b; padding: 40px; border-radius: 24px; max-width: 800px; width: 90%; text-align: center; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(56, 189, 248, 0.3); animation: fadeIn 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .close-btn { position: absolute; top: 15px; right: 25px; font-size: 28px; color: #94a3b8; cursor: pointer; transition: 0.3s; font-weight: bold; line-height: 1; }
+        .close-btn:hover { color: white; }
+        
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); font-size: 1.5rem; color: #94a3b8; cursor: pointer; user-select: none; transition: 0.3s; background: rgba(255,255,255,0.05); width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border-radius: 50%; z-index: 1001; border: 1px solid rgba(255,255,255,0.1); }
+        .nav-btn:hover { background: rgba(59, 130, 246, 0.2); color: white; border-color: rgba(59, 130, 246, 0.5); }
+        .left-btn { left: 10px; }
+        .right-btn { right: 10px; }
+
+        .modal-inner { transition: opacity 0.3s ease, transform 0.3s ease; }
+        .fade-out { opacity: 0; transform: translateX(-20px); }
+
+        /* Contenedor Oculto para exportación a PDF (Tema Claro forzado para impresión) */
+        #contenido-pdf { position: absolute; top: -9999px; left: -9999px; width: 1000px; background: white; padding: 40px; color: #333; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR GLOBAL -->
+    <aside class="sidebar">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 50px;">
+            <div style="width: 38px; height: 38px; display: flex; justify-content: center; align-items: center;">
+                <img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            </div>
+            <div style="line-height: 1.1;">
+                <span style="font-weight: 900; color: white; font-size: 16px; letter-spacing: 1px;">LECTOSOFT</span><br>
+                <span style="font-weight: 800; color: #38bdf8; font-size: 12px; letter-spacing: 2px;">ADMIN</span>
+            </div>
+        </div>
+
+        <div style="font-size: 11px; color: #475569; font-weight: 800; letter-spacing: 1.5px; margin-bottom: 15px; padding-left: 5px;">ADMINISTRACIÓN</div>
+        
+        <nav style="display: flex; flex-direction: column;">
+            <a href="/administrador/" class="sidebar-link"><span>📱</span> Panel de Control</a>
+            <a href="/admin_lectura/" class="sidebar-link"><span>📖</span> Cuentos</a>
+            <a href="/admi_rompecabeza/" class="sidebar-link"><span>🧩</span> Rompecabezas</a>
+            <a href="/jugadores/" class="sidebar-link"><span>👥</span> Jugadores</a>
+            <a href="/reportes/" class="sidebar-link"><span>📊</span> Reportes</a>
+            <a href="{% url 'manual_admin' %}" class="sidebar-link active"><span>📘</span> Manual</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="ambient-light"></div>
+        
+        <header class="topbar">
+            <!-- Acciones Top Right -->
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div id="theme-toggle-btn" class="theme-toggle-container" style="background: rgba(30, 41, 59, 0.6); padding: 4px; border-radius: 20px; display: flex; align-items: center; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;">
+                    <div id="theme-sun" style="padding: 6px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: 0.3s; opacity: 0.5;">
+                        <span style="font-size: 12px;">☀️</span>
+                    </div>
+                    <div id="theme-moon" style="background: #1e293b; padding: 6px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: 0.3s;">
+                        <span style="font-size: 12px;">🌙</span>
+                    </div>
+                </div>
+                
+                <a href="{% url 'logout_admin' %}" style="display: flex; align-items: center; gap: 8px; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 20px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 13px; transition: 0.3s;" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='transparent'">
+                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/><path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/></svg>
+                    Salir
+                </a>
+            </div>
+        </header>
+
+        <div style="padding: 0 40px 40px 40px; max-width: 1400px; width: 100%;">
+            
+            <div style="margin-bottom: 30px;">
+                <h1 style="color: white; font-size: 2.2rem; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px;">Manual del <span style="color: #3b82f6;">Administrador</span></h1>
+                <p style="color: #94a3b8; font-size: 14.5px;">Guía de uso para gestionar la plataforma Lectosoft.</p>
+            </div>
+
+            <div class="manual-container">
+                <div class="cards-grid" id="tarjetasContainer">
+                    {% for paso in pasos %}
+                        <div class="module-card" onclick="abrirTablero(parseInt('{{ forloop.counter0 }}'))">
+                            <div class="card-glow"></div>
+                            <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(59, 130, 246, 0.1); display: flex; justify-content: center; align-items: center; margin-bottom: 15px;">
+                                <span style="font-size: 24px;">📘</span>
+                            </div>
+                            <h3 style="color: white; font-size: 1.1rem; font-weight: 800; margin-bottom: 5px;">Paso {{ forloop.counter }}</h3>
+                            <p style="color: #94a3b8; font-size: 12px; font-weight: 600;">Haz clic para ver detalles</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="panel-derecho">
+                    <h3 style="color: white; margin-bottom: 10px; font-size: 1.2rem; font-weight: 800;">Guía en PDF</h3>
+                    <p style="color: #94a3b8; font-size: 13px; margin-bottom: 25px;">Exporta la guía para visualizarla sin conexión.</p>
+                    <button class="btn-descargar" onclick="descargarPDF()">📥 Descargar PDF</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal (Tablero del Paso) -->
+    <div id="tableroModal" class="modal">
+        <div class="modal-content">
+            <span class="nav-btn left-btn" onclick="cambiarPaso(-1)" id="btnPrev">&#10094;</span>
+            <span class="close-btn" onclick="cerrarTablero()">&times;</span>
+            <div id="modalInner" class="modal-inner">
+                <h2 id="modalTitle" style="color: #3b82f6; font-weight: 800; margin-bottom: 20px; font-size: 1.8rem;"></h2>
+                <img id="modalImage" src="" alt="Paso" style="max-height: 350px; width: auto; max-width: 100%; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; margin-bottom: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                <p id="modalText" style="font-size: 14px; color: #cbd5e1; background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 12px; border-left: 4px solid #3b82f6; font-weight: 500; line-height: 1.6;"></p>
+            </div>
+            <span class="nav-btn right-btn" onclick="cambiarPaso(1)" id="btnNext">&#10095;</span>
+        </div>
+    </div>
+
+    <!-- Contenedor Oculto para exportación a PDF (Mantiene fondo blanco para imprimir) -->
+    <div id="contenido-pdf">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <!-- Usamos una imagen genérica para el PDF si se requiere -->
+            <h2 style="font-family: Arial, sans-serif; color: #054a70; font-size: 2rem;">Manual del Administrador</h2>
+        </div>
+
+        {% for paso in pasos %}
+            <div style="page-break-after: always; margin-bottom: 40px; text-align: center; padding: 20px; border: 2px dashed #054a70; border-radius: 15px; background: #fafafa;">
+                <h3 style="font-family: Arial, sans-serif; color: #333; margin-bottom: 15px; font-size: 1.8rem;">Paso {{ forloop.counter }}</h3>
+                <img src="{% static 'inicio_sesion/img/pasoad' %}{{ paso.img }}.png" alt="Paso {{ forloop.counter }}" style="max-height: 500px; width: auto; max-width: 100%; border: 3px solid #ccc; border-radius: 10px;">
+                <p style="font-size: 1.2rem; color: #444; background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #054a70; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-top: 20px; font-weight: bold;">
+                    {{ paso.texto }}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {{ pasos|json_script:"pasos-data" }}
+    
+    <script>
+        const pasosData = JSON.parse(document.getElementById('pasos-data').textContent);
+        let currentIndex = 0;
+        const basePath = "{% static 'inicio_sesion/img/pasoad' %}";
+
+        // Función para renderizar el paso con transición
+        function renderPaso(index) {
+            const paso = pasosData[index];
+            const modalInner = document.getElementById('modalInner');
+            
+            modalInner.classList.add('fade-out');
+            
+            setTimeout(() => {
+                document.getElementById('modalTitle').innerText = 'Paso ' + (index + 1);
+                document.getElementById('modalImage').src = basePath + paso.img + '.png';
+                document.getElementById('modalText').innerText = paso.texto;
+                
+                document.getElementById('btnPrev').style.display = index === 0 ? 'none' : 'flex';
+                document.getElementById('btnNext').style.display = index === pasosData.length - 1 ? 'none' : 'flex';
+                
+                modalInner.classList.remove('fade-out');
+            }, 300);
+        }
+
+        function abrirTablero(index) {
+            currentIndex = index;
+            document.getElementById('modalInner').classList.remove('fade-out');
+            
+            const paso = pasosData[currentIndex];
+            document.getElementById('modalTitle').innerText = 'Paso ' + (currentIndex + 1);
+            document.getElementById('modalImage').src = basePath + paso.img + '.png';
+            document.getElementById('modalText').innerText = paso.texto;
+            
+            document.getElementById('btnPrev').style.display = currentIndex === 0 ? 'none' : 'flex';
+            document.getElementById('btnNext').style.display = currentIndex === pasosData.length - 1 ? 'none' : 'flex';
+            
+            document.getElementById('tableroModal').style.display = 'flex';
+        }
+
+        function cambiarPaso(direccion) {
+            let nuevoIndex = currentIndex + direccion;
+            if (nuevoIndex >= 0 && nuevoIndex < pasosData.length) {
+                currentIndex = nuevoIndex;
+                renderPaso(currentIndex);
+            }
+        }
+
+        function cerrarTablero() {
+            document.getElementById('tableroModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('tableroModal');
+            if (event.target == modal) {
+                cerrarTablero();
+            }
+        }
+
+        function descargarPDF() {
+            const btn = document.querySelector('.btn-descargar');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ Generando...';
+            btn.style.pointerEvents = 'none';
+
+            const elemento = document.getElementById('contenido-pdf');
+            elemento.style.position = 'relative';
+            elemento.style.left = '0';
+            elemento.style.top = '0';
+
+            const opciones = {
+                margin:       10,
+                filename:     'Manual_Administrador_Lectosoft.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            html2pdf().set(opciones).from(elemento).save().then(() => {
+                btn.innerHTML = originalText;
+                btn.style.pointerEvents = 'auto';
+                elemento.style.position = 'absolute';
+                elemento.style.left = '-9999px';
+                elemento.style.top = '-9999px';
+            }).catch(err => {
+                alert("Hubo un error al generar el PDF.");
+                btn.innerHTML = originalText;
+                btn.style.pointerEvents = 'auto';
+                elemento.style.position = 'absolute';
+                elemento.style.left = '-9999px';
+                elemento.style.top = '-9999px';
+            });
+        }
+        
+        function aplicarEscalaResponsiva() {
+            const minWidth = 1100; 
+            const screenWidth = window.innerWidth;
+            
+            if (screenWidth < minWidth) {
+                const scale = screenWidth / minWidth;
+                document.body.style.transform = `scale(${scale})`;
+                document.body.style.transformOrigin = 'top left';
+                document.body.style.width = `${minWidth}px`;
+                document.body.style.minHeight = `${window.innerHeight / scale}px`;
+                document.documentElement.style.overflowX = 'hidden';
+                document.body.style.overflowX = 'hidden';
+            } else {
+                document.body.style.transform = 'none';
+                document.body.style.width = '100%';
+                document.body.style.minHeight = '100vh';
+            }
+        }
+        window.addEventListener('resize', aplicarEscalaResponsiva);
+        window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+        aplicarEscalaResponsiva();
+    </script>
+    <script src="{% static 'inicio_sesion/js/admin_theme.js' %}"></script>
+</body>
+</html>

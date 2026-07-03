@@ -1,0 +1,190 @@
+/* =========================================
+   LECTOSOFT - CATÁLOGO INTERACTIVO
+   ========================================= */
+
+body {
+    background-color: #000 !important;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-family: 'Luckiest Guy', cursive;
+}
+
+.contenedor {
+    width: 90vw;
+    height: 85vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: center;
+    position: relative;
+}
+
+.logo-text {
+    position: absolute;
+    top: 20px;
+    left: 25px;
+    z-index: 10;
+}
+
+.logo-text img {
+    height: 100px;
+    width: auto;
+}
+
+.btn-inicio-limpio {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    z-index: 10;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.btn-inicio-limpio img {
+    width: 90px;
+    height: auto;
+}
+
+main {
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    align-items: center;
+    margin-top: 10px; 
+}
+
+.top-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: -30px; /* Movido hacia arriba */
+}
+
+.title {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 2.8rem !important;
+    margin: 0px !important;
+    color: #000 !important;
+    letter-spacing: 2px;
+}
+
+.search-container {
+    margin: 0 !important; /* Menos espacio entre título y búsqueda */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.search-box {
+    background: white;
+    border: 5px solid #000;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    width: 45%;
+    padding: 6px 20px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1.2rem;
+    margin-left: 10px;
+    font-family: 'Luckiest Guy', cursive;
+}
+
+.book-grid {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 40px;
+    margin-bottom: 20px;
+}
+
+.book-card {
+    width: 220px !important;
+    height: 330px !important;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 15px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease, background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.book-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.character-img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.libro-generado-img {
+    border-radius: 12px;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.book-card:hover .character-img {
+    transform: scale(1.08);
+}
+
+.hidden {
+    display: none !important;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+/* --- AJUSTES PARA EL ENLACE DE CAPERUCITA --- */
+
+.book-card a {
+    text-decoration: none;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.book-card a:focus {
+    outline: none;
+}
+

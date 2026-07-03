@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft - Perfil Final</title>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Open+Sans:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/menu_juego.css' %}">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/perfil.css' %}?v=58">
+</head>
+<body>
+    <div class="contenedor">
+        <img src="{% static 'inicio_sesion\img\logolecto.png' %}" class="logo-text-img" alt="Logo">
+        <a href="/menu/" class="btn-inicio-limpio">
+            <img src="{% static 'inicio_sesion/img/inicio_catalogo.png' %}" alt="Inicio">
+        </a>
+        <div class="title-container">
+            <div class="radiating-lines left"></div>
+            <h1 class="title-page">PERFIL</h1>
+            <div class="radiating-lines right"></div>
+        </div>
+        
+        <div class="logout-wrapper">
+            <a href="/" class="btn-logout-link"><img src="{% static 'inicio_sesion/img/cerrar_secion.png' %}" alt="Salir"></a>
+        </div>
+        <div class="panel-perfil">
+            <div class="profile-content">
+                <div class="avatar-section">
+                    <div class="avatar-wrapper">
+                        <img id="avatar-image" src="" alt="Avatar">
+                        <div class="avatar-decorations">
+                            <div class="crown-mask"></div>
+                            <div class="lines-mask"></div>
+                            <div class="lines-bottom-mask"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <img src="{% static 'inicio_sesion/img/tabla_perfil.png' %}" class="badge-star-img" alt="Etiqueta Estrella">
+                    <img src="{% static 'inicio_sesion/img/huella_perfil.png' %}" class="badge-paw" alt="Huella">
+                    <div class="edit-row">
+                        <div id="player-name-container">
+                            <span class="label-text">NOMBRE:</span>
+                            <p id="player-name-text"></p> 
+                        </div>
+                        <button id="btn-edit-action" class="btn-edit-info" onclick="handleEditClick()">
+                            <img id="img-edit-icon" src="{% static 'inicio_sesion/img/Editar_p.png' %}" alt="Editar">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Personalizado para Mensajes -->
+        <div id="custom-alert-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); z-index: 5000; flex-direction: column; justify-content: center; align-items: center;">
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 30px; border: 2px solid rgba(255, 255, 255, 0.3); text-align: center; box-shadow: 0 0 50px rgba(255, 255, 255, 0.2); max-width: 80%;">
+                <h2 id="custom-alert-title" style="color: white; font-family: 'Luckiest Guy', cursive; font-size: 3rem; margin-bottom: 20px; text-shadow: 0 0 20px #FFD700;">✨ ¡MÁGICO! ✨</h2>
+                <p id="custom-alert-message" style="color: white; font-size: 1.5rem; font-family: 'Open Sans', sans-serif;">Mensaje</p>
+                <button onclick="closeCustomAlert()" style="display: inline-block; margin-top: 25px; padding: 15px 40px; background: #FFD700; color: #333; font-weight: 900; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); transition: transform 0.2s;">ACEPTAR</button>
+            </div>
+        </div>
+        <!-- BOTÓN FLOTANTE MANUAL DE USUARIO -->
+        <style>
+            .btn-flotante-manual {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+                background-color: #ff9800;
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 36px;
+                font-family: 'Luckiest Guy', sans-serif;
+                text-decoration: none;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+                z-index: 9999;
+                border: 3px solid white;
+                transition: transform 0.2s, background-color 0.2s;
+            }
+            .btn-flotante-manual:hover {
+                transform: scale(1.1);
+                background-color: #f57c00;
+                color: white;
+            }
+        </style>
+        <a href="{% url 'manual_usuario' %}" class="btn-flotante-manual" title="Ver Manual de Usuario">
+            ?
+        </a>
+    </div>
+
+    <script>
+        const iconEditar = "{% static 'inicio_sesion/img/Editar_p.png' %}";
+        const iconAceptar = "{% static 'inicio_sesion/img/aceptar.png' %}";
+        
+        // Obtener el nombre del jugador desde la cookie
+        function getJugadorActual() {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'jugador_actual') {
+                    return decodeURIComponent(value);
+                }
+            }
+            return null;
+        }
+        
+        // Sincronizar cookie con localStorage
+        const jugadorActual = getJugadorActual();
+        if (jugadorActual) {
+            localStorage.setItem('nombreJugadorLectosoft', jugadorActual);
+        } else {
+            localStorage.removeItem('nombreJugadorLectosoft');
+            window.location.href = '/login/';
+        }
+    </script>
+    <script src="{% static 'inicio_sesion/js/perfil.js' %}?v=5"></script>
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

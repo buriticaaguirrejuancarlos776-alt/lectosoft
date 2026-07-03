@@ -1,0 +1,4 @@
+Libro: soldado, id: 51
+Puzzles count from related name: 1
+ - Puzzle: Rompecabezas de soldado (ID: 74)
+Puzzles count from query: 1

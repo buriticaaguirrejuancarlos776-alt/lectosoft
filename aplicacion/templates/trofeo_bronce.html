@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectosoft - Detalle Trofeo Bronce</title>
+
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/menu_juego.css' %}">
+    <link rel="stylesheet" href="{% static 'inicio_sesion/css/trofeo_bronce.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+    <style>
+
+        body {
+            background-color: #000 !important;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; 
+            font-family: 'Luckiest Guy', cursive;
+        }
+
+        .contenedor {
+            width: 90vw;
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .logo-text {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            z-index: 10;
+        }
+
+        .logo-text img {
+            height: 100px;
+            width: auto;
+        }
+
+        .btn-atras-enmarcado {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            z-index: 10;
+            transition: transform 0.2s ease;
+        }
+
+        .btn-atras-enmarcado img {
+            width: 110px;
+            height: auto;
+        }
+
+        .btn-atras-enmarcado:hover {
+            transform: scale(1.1);
+        }
+
+        main {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .title-section {
+            font-family: 'Luckiest Guy', cursive !important;
+            font-size: 3rem !important;
+            color: #000 !important;
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: none !important;
+        }
+
+        .content-wrapper {
+            display: flex;
+            width: 90%;
+            justify-content: center;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .trofeo-visual img {
+            width: 320px;
+            height: auto;
+            filter: drop-shadow(15px 15px 20px rgba(0,0,0,0.4));
+        }
+
+
+        .stats-panel {
+            background-color: #E5E9D1 !important; 
+            border: 4px solid #000;
+            border-radius: 30px;
+            padding: 30px;
+            min-width: 380px;
+            box-shadow: 10px 10px 0px #000;
+        }
+
+ 
+        .trofeo-name {
+            font-family: 'Luckiest Guy', cursive !important;
+            font-size: 2.2rem !important;
+            color: #000 !important;
+            margin-bottom: 25px;
+            text-align: center;
+            text-shadow: none !important;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: #000;
+            border-bottom: 2px dashed rgba(0,0,0,0.1);
+            padding-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #000;
+            font-family: 'Luckiest Guy', cursive;
+        }
+
+        .stat-value {
+            color: #000 !important;
+            font-size: 1.8rem;
+            font-family: 'Luckiest Guy', cursive;
+        }
+
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+        
+        <div class="logo-text">
+            <img src="{% static 'inicio_sesion/img/logolecto.png' %}" alt="Lectosoft">
+        </div>
+
+        <a href="javascript:history.back()" class="btn-atras-enmarcado">
+            <img src="{% static 'inicio_sesion/img/Atrás.png' %}" alt="Atrás">
+        </a>
+
+        <main>
+            <h1 class="title-section"></h1>
+
+            <div class="content-wrapper">
+                <div class="trofeo-visual">
+                    <img src="{% static 'inicio_sesion/img/trofeo_bronce.png' %}" alt="Trofeo Fuego de Bronce" class="floating">
+                </div>
+
+                <div class="stats-panel">
+                    <h2 class="trofeo-name">FUEGO DE BRONCE</h2>
+                    <p style="text-align: center; font-size: 1.2rem; color: #000; margin-top: -15px; margin-bottom: 20px;">{{ nombre_jugador|default:"Explorador" }}</p>
+                    
+                    <div class="stats-list">
+                        <div class="stat-item">
+                            <span class="stat-label">PUNTUACIÓN:</span>
+                            <span class="stat-value">{{ puntuacion }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">LIBROS LEÍDOS:</span>
+                            <span class="stat-value">{{ libros_leidos }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>

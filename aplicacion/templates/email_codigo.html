@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Fredoka', Arial, sans-serif; background-color: #f4f7f2; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; background: #ffffff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #e0e0e0; }
+        .header { background-color: #8fa384; padding: 30px; text-align: center; }
+        .header img { height: 80px; width: auto; }
+        .content { padding: 40px; text-align: center; color: #333333; }
+        .code-box { background-color: #f0f4ee; border: 2px dashed #4a6345; border-radius: 10px; padding: 20px; margin: 30px 0; display: inline-block; }
+        .code { font-size: 36px; font-weight: bold; color: #4a6345; letter-spacing: 5px; }
+        .footer { background-color: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #888888; border-top: 1px solid #eeeeee; }
+        h1 { color: #ffffff; margin: 10px 0 0 0; font-size: 24px; }
+        p { line-height: 1.6; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- El logo se adjuntará como CID -->
+            <img src="cid:logolecto" alt="Lectosoft Logo">
+            <h1>Seguridad Administrativa</h1>
+        </div>
+        <div class="content">
+            <p>Hola, <strong>Administrador</strong>.</p>
+            <p>Has solicitado un código de seguridad para acceder al panel de control de Lectosoft.</p>
+            <p>Usa el siguiente código para completar tu inicio de sesión:</p>
+            <div class="code-box">
+                <span class="code">{{ codigo }}</span>
+            </div>
+            <p>Este código es válido por tiempo limitado. Si no solicitaste este acceso, por favor ignora este mensaje.</p>
+        </div>
+        <div class="footer">
+            &copy; 2026 Lectosoft - Plataforma Educativa.<br>
+            Este es un mensaje automático, por favor no respondas a este correo.
+        </div>
+    </div>
+
+
+
+<!-- SCRIPT DE AUTO-ESCALADO RESPONSIVO -->
+<script>
+    function aplicarEscalaResponsiva() {
+        const minWidth = 1100; // Ancho base de diseño
+        const screenWidth = window.innerWidth;
+        
+        if (screenWidth < minWidth) {
+            const scale = screenWidth / minWidth;
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = `${minWidth}px`;
+            document.body.style.minHeight = `${window.innerHeight / scale}px`;
+            document.documentElement.style.overflowX = 'hidden';
+            document.body.style.overflowX = 'hidden';
+        } else {
+            document.body.style.transform = 'none';
+            document.body.style.width = '100%';
+            document.body.style.minHeight = '100vh';
+        }
+    }
+    window.addEventListener('resize', aplicarEscalaResponsiva);
+    window.addEventListener('DOMContentLoaded', aplicarEscalaResponsiva);
+    aplicarEscalaResponsiva();
+</script>
+
+</body>
+</html>
