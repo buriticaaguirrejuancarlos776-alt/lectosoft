@@ -24,6 +24,11 @@ urlpatterns = [
     path('', include('aplicacion.urls')),
 ]
 
+# El estático lo sirve WhiteNoise (vía middleware) en todos los entornos.
+# El media (contenido subido por usuarios) lo sirve Django directamente,
+# también en producción, porque el proxy Caddy de este despliegue no tiene
+# acceso al volumen de media (es compartido con otro proyecto).
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=str(settings.BASE_DIR / "aplicacion/static"))
