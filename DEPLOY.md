@@ -217,7 +217,7 @@ que además:
 
 - Hace un backup (`mysqldump`) de la base de datos **antes** de reconstruir
   los contenedores, guardado en `~/lectosoft_backups/` en el servidor
-  (conserva los últimos 10).
+  (conserva los últimos 2).
 - Nunca borra volúmenes: los datos de MySQL y el media viven en volúmenes
   con nombre (`mysql_data`, `media_data`) que persisten entre despliegues.
 - Verifica, tras el `docker compose up -d --build`, que los contenedores

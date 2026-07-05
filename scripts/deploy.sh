@@ -22,8 +22,8 @@ if [ -n "$DB_CID" ] && [ "$(docker inspect -f '{{.State.Running}}' "$DB_CID" 2>/
   DB_ROOT_PASSWORD=$(grep '^DB_ROOT_PASSWORD=' .env | cut -d= -f2-)
   DB_NAME=$(grep '^DB_NAME=' .env | cut -d= -f2-)
   docker compose exec -T db mysqldump -u root -p"${DB_ROOT_PASSWORD}" "${DB_NAME}" > "$BACKUP_DIR/backup_${TIMESTAMP}.sql"
-  # Conserva solo los últimos 10 backups para no llenar el disco.
-  ls -t "$BACKUP_DIR"/backup_*.sql 2>/dev/null | tail -n +11 | xargs -r rm --
+  # Conserva solo los últimos 2 backups para no llenar el disco.
+  ls -t "$BACKUP_DIR"/backup_*.sql 2>/dev/null | tail -n +3 | xargs -r rm --
   echo "Backup guardado en $BACKUP_DIR/backup_${TIMESTAMP}.sql"
 else
   echo "El contenedor db no está corriendo todavía; se omite el backup (primer despliegue)."
