@@ -14,10 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import re
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, re_path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,8 +30,15 @@ urlpatterns = [
 # El estático lo sirve WhiteNoise (vía middleware) en todos los entornos.
 # El media (contenido subido por usuarios) lo sirve Django directamente,
 # también en producción, porque el proxy Caddy de este despliegue no tiene
-# acceso al volumen de media (es compartido con otro proyecto).
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# acceso al volumen de media (es compartido con otro proyecto). No se usa
+# el helper static() para esto porque internamente hace no-op si DEBUG=False.
+urlpatterns += [
+    re_path(
+        r'^%s(?P<path>.*)$' % re.escape(settings.MEDIA_URL.lstrip('/')),
+        serve,
+        {'document_root': settings.MEDIA_ROOT},
+    ),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=str(settings.BASE_DIR / "aplicacion/static"))
