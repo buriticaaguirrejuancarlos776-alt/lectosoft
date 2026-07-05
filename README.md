@@ -73,3 +73,5 @@ scripts/deploy.sh              # script de despliegue (con backup de BD)
 .github/workflows/deploy.yml   # CI/CD: despliega en push a main
 Dockerfile / docker-compose.yml
 ```
+
+> Despliegue automático verificado (llave SSH dedicada renovada) el 2026-07-05.
